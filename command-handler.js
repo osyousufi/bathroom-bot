@@ -28,7 +28,7 @@ module.exports = {
           return
         }
         else if (command.args && !args.length) {
-          let reply = `You didn't provide any arguments, ${message.author.username}!`;
+          let reply = `You didn't provide any arguments, ${message.author.username}! owned NOOB HAHAHA XDD`;
           errorEmbed.setTitle(reply);
           if (command.usage) {
             reply = `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
@@ -38,12 +38,16 @@ module.exports = {
           return
         }
         else if (command.mention && !message.mentions.users.first()){
-          let reply = `You didn't mention a user, ${message.author.username}!`;
+          let reply = `You didn't mention a user, ${message.author.username}! LOL IDIEOT owned LAYMOO!!! XD`;
           errorEmbed.setTitle(reply);
           if (command.usage) {
             reply = `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
             errorEmbed.setDescription(reply);
           }
+          message.channel.send(errorEmbed);
+          return
+        } else if (command.perms && !message.member.hasPermission(command.perms)) {
+          errorEmbed.setTitle(`You dont have perms for this, ${message.author.username}, LOL get owned liberal!!! LMAO!`)
           message.channel.send(errorEmbed);
           return
         }
