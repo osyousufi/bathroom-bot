@@ -31,7 +31,7 @@ module.exports = {
 
       try {
         flashEmbed.setTitle(`${taggedUser.username}'s balance is:`);
-        flashEmbed.setDescription(`***${taggedProfileData.rupees}*** rupees`);
+        flashEmbed.setDescription(`**\`${taggedProfileData.rupees}\`** rupees`);
         await message.channel.send(flashEmbed);
       } catch (err) {
           flashEmbed.setColor('#000000');
@@ -45,7 +45,7 @@ module.exports = {
 
       try {
         flashEmbed.setTitle(`${message.author.username},`);
-        flashEmbed.setDescription(`Your current balance is: ***${profileData.rupees}*** rupees, your bank balance is: ***${profileData.bank}*** rupees`)
+        flashEmbed.setDescription(`Your current balance is: **\`${profileData.rupees}\`** rupees, your bank balance is: **\`${profileData.bank}\`** rupees`)
         await message.channel.send(flashEmbed);
       } catch (err) {
         flashEmbed.setColor('#000000');

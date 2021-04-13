@@ -21,7 +21,7 @@ module.exports = {
       .setColor('#00FF00');
 
     flashEmbed.setTitle(`${message.author.username},`);
-    flashEmbed.setDescription(`you received your daily stimulus of ***${dailyValue}*** rupees!`);
+    flashEmbed.setDescription(`you received your daily stimulus of **\`${dailyValue}\`** rupees!`);
     return message.channel.send(flashEmbed);
   }
 }
