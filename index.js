@@ -5,26 +5,33 @@ const mongoose = require('mongoose');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+client.cooldowns = new Discord.Collection();
 
-const commandHandler = require('./command-handler');
-const commandLoader = require('./command-loader');
-commandLoader.load(client, client.commands);
+const commandHandler = require('./utility/command-handler');
+const commandLoader = require('./utility/command-loader');
+const eventHandler = require('./utility/event-handler');
 
-
-client.once('ready', async () => {
-	console.log('Ready!');
-});
 
 mongoose.connect(process.env.MONGO_PATH, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-		useFindAndModify: false
+		useFindAndModify: false,
+    useCreateIndex: true,
+}).then(() => {
+  console.log('connected to mongodb');
+}).catch((err) => {
+  console.log(err);
+})
+
+client.on('ready', async () => {
+  commandLoader.load(client, client.commands);
+  eventHandler.load(client);
+	console.log('Ready!');
+
 });
 
-
 client.on('message', (message) => {
-  commandHandler.config(client, client.commands, message)
-
+  commandHandler.config(client, client.commands, client.cooldowns, message)
 });
 
 

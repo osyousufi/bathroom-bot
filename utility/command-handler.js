@@ -1,25 +1,68 @@
 const Discord = require('discord.js');
+const prefixModel = require('../models/prefixSchema');
+const sheeshModel = require("../models/sheeshSchema");
+const profileModel = require("../models/profileSchema");
+
 
 module.exports = {
-  async config(client, commands, message) {
+  async config(client, commands, cooldowns, message) {
 
-    const prefix = require('./models/prefix-model');
-    const sheeshModel = require("./models/sheesh-model");
-
-    const errorCheck = async (prefix) => {
+    const messageCheck = async (prefix) => {
 
       if (message.content === 'SHEESH' && message.channel.id == 825656630115827712) {
         await sheeshModel.findByIdAndUpdate("60739b967d146e235000dfc4", {$inc: {Count: 1} });
       }
 
+      //check for profile data, if none, create one
+      let profileData;
+      try {
+        profileData = await profileModel.findOne({ userID: message.author.id });
+        if(!profileData) {
+          let profile = await profileModel.create({
+            userID: message.author.id,
+            rupees: 1000,
+            bank: 0
+          });
+          profile.save();
+        }
+      } catch (err) {
+         console.log(err);
+      }
+
       if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+
       const args = message.content.slice(prefix.length).trim().split(/ +/);
       const commandName = args.shift().toLowerCase();
       const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-      if (!command) return;
+      if (!command) return; //or return in message.channel: this command doesn't exist
 
       const errorEmbed = new Discord.MessageEmbed()
         .setColor('#FF0000');
+
+
+      const { cooldowns } = client;
+
+      if (!cooldowns.has(command.name)) {
+      	cooldowns.set(command.name, new Discord.Collection());
+      }
+
+      const now = Date.now();
+      const timestamps = cooldowns.get(command.name);
+      const cooldownAmount = (command.cooldown || 2) * 1000;
+
+      if (timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+      	if (now < expirationTime) {
+      		const timeLeft = (expirationTime - now) / 1000;
+          errorEmbed.setTitle(`${message.author.username},`);
+          errorEmbed.setDescription(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+      		return message.channel.send(errorEmbed);
+      	}
+      }
+      timestamps.set(message.author.id, now);
+      setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
       try {
         if (command.guildOnly && message.channel.type === 'dm') {
@@ -28,7 +71,7 @@ module.exports = {
           return
         }
         else if (command.args && !args.length) {
-          let reply = `You didn't provide any arguments, ${message.author.username}! owned NOOB HAHAHA XDD`;
+          let reply = `You didn't provide any arguments, ${message.author.username}!`;
           errorEmbed.setTitle(reply);
           if (command.usage) {
             reply = `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
@@ -38,7 +81,7 @@ module.exports = {
           return
         }
         else if (command.mention && !message.mentions.users.first()){
-          let reply = `You didn't mention a user, ${message.author.username}! LOL IDIEOT owned LAYMOO!!! XD`;
+          let reply = `You didn't mention a user, ${message.author.username}!`;
           errorEmbed.setTitle(reply);
           if (command.usage) {
             reply = `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
@@ -51,8 +94,7 @@ module.exports = {
           message.channel.send(errorEmbed);
           return
         }
-
-        command.execute(message, args);
+        await command.execute(message, args, profileData);
       } catch (error) {
         console.error(error);
       }
@@ -61,18 +103,18 @@ module.exports = {
 
     if (message.channel.type == 'dm'){
       const prefix = "//"
-      errorCheck(prefix);
+      messageCheck(prefix);
     } else {
-      const data = await prefix.findOne({
+      const data = await prefixModel.findOne({
           GuildID: message.guild.id
       });
 
       if (data) {
         const prefix = data.Prefix;
-        errorCheck(prefix);
+        messageCheck(prefix);
       } else {
         const prefix = "//"
-        errorCheck(prefix);
+        messageCheck(prefix);
       }
 
     }
