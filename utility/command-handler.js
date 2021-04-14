@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const prefixModel = require('../models/prefixSchema');
 const sheeshModel = require("../models/sheeshSchema");
 const profileModel = require("../models/profileSchema");
-
+const flashEmbed = require('./flash-embed.js');
 
 module.exports = {
   async config(client, commands, cooldowns, message) {
@@ -35,11 +35,7 @@ module.exports = {
       const args = message.content.slice(prefix.length).trim().split(/ +/);
       const commandName = args.shift().toLowerCase();
       const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-      if (!command) return; //or return in message.channel: this command doesn't exist
-
-      const errorEmbed = new Discord.MessageEmbed()
-        .setColor('#FF0000');
-
+      if (!command) return; //or return in message.author.channel: this command doesn't exist
 
       const { cooldowns } = client;
 
@@ -56,9 +52,9 @@ module.exports = {
 
       	if (now < expirationTime) {
       		const timeLeft = (expirationTime - now) / 1000;
-          errorEmbed.setTitle(`${message.author.username},`);
-          errorEmbed.setDescription(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
-      		return message.channel.send(errorEmbed);
+      		return message.channel.send(
+            flashEmbed.display('#FF0000', `${message.author.username},`, `please wait ${Math.round(timeLeft.toFixed(1))} more second(s) before reusing the \`${command.name}\` command.`)
+          );
       	}
       }
       timestamps.set(message.author.id, now);
@@ -66,35 +62,34 @@ module.exports = {
 
       try {
         if (command.guildOnly && message.channel.type === 'dm') {
-          errorEmbed.setTitle('I can\'t execute that command inside DMs!');
-          message.channel.send(errorEmbed);
-          return
+
+          return message.channel.send(
+            flashEmbed.display('#FF0000', `${message.author.username},`, 'I can\'t execute that command inside DMs!')
+          );
+
         }
         else if (command.args && !args.length) {
-          let reply = `You didn't provide any arguments, ${message.author.username}!`;
-          errorEmbed.setTitle(reply);
+          let reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't provide any arguments!`);
           if (command.usage) {
-            reply = `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-            errorEmbed.setDescription(reply);
+            reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't provide any arguments! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``);
           }
-          message.channel.send(errorEmbed);
-          return
+          return message.channel.send(reply);
         }
         else if (command.mention && !message.mentions.users.first()){
-          let reply = `You didn't mention a user, ${message.author.username}!`;
+          let reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't mention a user!`)
           errorEmbed.setTitle(reply);
           if (command.usage) {
-            reply = `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-            errorEmbed.setDescription(reply);
+            reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't mention a user! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``)
           }
-          message.channel.send(errorEmbed);
-          return
+          return message.channel.send(reply);
+
         } else if (command.perms && !message.member.hasPermission(command.perms)) {
-          errorEmbed.setTitle(`You dont have perms for this, ${message.author.username}, LOL get owned liberal!!! LMAO!`)
-          message.channel.send(errorEmbed);
-          return
+
+          return message.channel.send(
+            flashEmbed.display('#FF0000', `${message.author.username},`, `You dont have perms for this!`)
+          );
         }
-        await command.execute(message, args, profileData);
+        await command.execute(message, args, profileData, client);
       } catch (error) {
         console.error(error);
       }

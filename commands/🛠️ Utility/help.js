@@ -1,22 +1,37 @@
 const Discord = require('discord.js');
 const prefix = "//"
+const fs = require('fs');
+const commandFolders = fs.readdirSync('./commands/');
+const flashEmbed = require('../../utility/flash-embed.js');
 
 module.exports = {
 	name: 'help',
 	description: 'List all of my commands or info about a specific command.',
+	catagory: 'info',
 	execute(message, args) {
 
     const data = [];
     const { commands } = message.client;
-		const errorEmbed = new Discord.MessageEmbed()
-			.setColor('#FF0000')
 
 		const helpEmbed = new Discord.MessageEmbed()
+			.setAuthor('Bathroom Bot', 'https://i.imgur.com/wSTFkRM.png')
+			.setFooter('Developed by: osyou#2095')
 
     if (!args.length) {
 
-			helpEmbed.setTitle('Here\'s a list of all my commands:');
-			helpEmbed.addField(`${commands.map(command => command.secret ? null : command.name).join(', ')}`, `You can send \`${prefix}help <command name>\` to get info on a specific command!` )
+			for (let folder of commandFolders) {
+				if (folder == 'secret') {
+				} else {
+					const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+					let commandStorage  = [];
+		    	for (let file of commandFiles) {
+		    		const command = require(`../../commands/${folder}/${file}`);
+						commandStorage.push(`\`${command.name}\``)
+		    	}
+					helpEmbed.addField(`${folder}`, `${commandStorage.join(', ')}`)
+				}
+			}
+			helpEmbed.setDescription(`You can send **\`${prefix}help <command name>\`** to get info on a specific command!`)
 			message.channel.send(helpEmbed)
 
     } else {
@@ -25,7 +40,9 @@ module.exports = {
 
 	    if (!command) {
 	    	errorEmbed.setTitle(`${message.author.username}, that\'s not a valid command!`);
-				message.channel.send(errorEmbed)
+				message.channel.send(
+					flashEmbed.display('#FF0000',`${message.author.username},`, `That's not a valid command!`)
+				)
 	    }
 
 			if (!command || command.secret) {

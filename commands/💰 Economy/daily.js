@@ -1,11 +1,14 @@
 const Discord = require('discord.js');
 const profileModel = require('../../models/profileSchema');
+const flashEmbed = require('../../utility/flash-embed.js');
+
 
 module.exports = {
   name: "daily",
   description: "Get daily rupees.",
   cooldown: 86400,
   async execute(message, args, profileData) {
+
 
     //for random logic:
     // const randomRange = 100;
@@ -17,11 +20,9 @@ module.exports = {
       userID: message.author.id
     }, { $inc: {rupees: dailyValue} });
 
-    const flashEmbed = new Discord.MessageEmbed()
-      .setColor('#00FF00');
+    await message.channel.send(
+      flashEmbed.display('#00FF00',`${message.author.username},`, `you received your daily stimulus of **\`${dailyValue}\`** rupees!`)
+    );
 
-    flashEmbed.setTitle(`${message.author.username},`);
-    flashEmbed.setDescription(`you received your daily stimulus of **\`${dailyValue}\`** rupees!`);
-    return message.channel.send(flashEmbed);
   }
 }

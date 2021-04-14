@@ -2,20 +2,17 @@ const Discord = require('discord.js');
 module.exports = {
   name: "debug",
   description: "debug command for osyou",
-  secret: true,
-  cooldown: 20,
   async execute(message, args) {
 
-
-
     // message.channel.send(message.member.permissions.toArray())
-    message.channel.send('debugging...')
-    await setTimeout(() => {
-      message.channel.send('complete')
-    }, 3000)
+    // message.channel.send('debugging...')
+    // await setTimeout(() => {
+    //   message.channel.send('complete')
+    // }, 3000)
 
-
-
+    // const emojiList = message.guild.emojis.cache.map(e=>e.name).join(" ");
+    // message.channel.send(emojiList);
+    
 
   }
 }
@@ -27,7 +24,6 @@ module.exports = {
 // usage: '<@username>',
 // aliases: ['al1', 'al2'],
 // description: 'desc here',
-// secret: true,
 // perms: 'PERM_HERE',
 // cooldown: 5,
 

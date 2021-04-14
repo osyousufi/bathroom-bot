@@ -4,7 +4,6 @@ module.exports = {
   name: "sheesh",
   description: "sheesh counter for jerry's server",
   guildOnly: true,
-  secret: true,
   async execute(message, args) {
 
     if (message.guild.id == 771996817507352606) {
