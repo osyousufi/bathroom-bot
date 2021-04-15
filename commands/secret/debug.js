@@ -4,15 +4,7 @@ module.exports = {
   description: "debug command for osyou",
   async execute(message, args) {
 
-    // message.channel.send(message.member.permissions.toArray())
-    // message.channel.send('debugging...')
-    // await setTimeout(() => {
-    //   message.channel.send('complete')
-    // }, 3000)
-
-    // const emojiList = message.guild.emojis.cache.map(e=>e.name).join(" ");
-    // message.channel.send(emojiList);
-    
+    message.channel.send('debugging')
 
   }
 }

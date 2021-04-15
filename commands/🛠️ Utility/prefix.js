@@ -5,16 +5,13 @@ const flashEmbed = require('../../utility/flash-embed.js');
 module.exports = {
   name: "prefix",
   guildOnly: true,
-  aliases: ['sp'],
-  perms: 'KICK_MEMBERS',
+  aliases: ['sp', 'setprefix'],
+  perms: 'ADMINISTRATOR',
   async execute(message, args) {
 
     const data = await prefixModel.findOne({
         GuildID: message.guild.id
     });
-
-    const flashEmbed = new Discord.MessageEmbed()
-			.setColor('#FF0000');
 
     if (!args[0]) {
       return message.channel.send(

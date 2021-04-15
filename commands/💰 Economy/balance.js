@@ -29,7 +29,7 @@ module.exports = {
 
       try {
         await message.channel.send(
-          flashEmbed.display('#00FF00', `${taggedUser.username}'s balance is:`, `**\`${taggedProfileData.rupees}\`** rupees. Their bank balance is: **\`${taggedProfileData.bank}\`** rupees`)
+          flashEmbed.display('#00FF00', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.rupees}\`** rupees \nBank: **\`${taggedProfileData.bank}\`** rupees`)
         );
       } catch (err) {
           await message.channel.send(
@@ -42,7 +42,7 @@ module.exports = {
 
       try {
         await message.channel.send(
-          flashEmbed.display('#00FF00', `${message.author.username},`, `Your current balance is: **\`${profileData.rupees}\`** rupees, your bank balance is: **\`${profileData.bank}\`** rupees`)
+          flashEmbed.display('#00FF00', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.rupees}\`** rupees \nBank: **\`${profileData.bank}\`** rupees`)
         );
       } catch (err) {
         await message.channel.send(
