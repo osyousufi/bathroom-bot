@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const prefix = "//"
 const fs = require('fs');
 const commandFolders = fs.readdirSync('./commands/');
 const flashEmbed = require('../../utility/flash-embed.js');
@@ -8,13 +7,13 @@ module.exports = {
 	name: 'help',
 	description: 'List all of my commands or info about a specific command.',
 	catagory: 'info',
-	execute(message, args) {
+	execute(message, args, profileData, client, prefix) {
 
     const data = [];
     const { commands } = message.client;
 
 		const helpEmbed = new Discord.MessageEmbed()
-			.setAuthor('Bathroom Bot', 'https://i.imgur.com/wSTFkRM.png')
+			.setAuthor('Bathroom Bot', 'https://i.imgur.com/JDkzvGC.png')
 			.setFooter('Developed by: osyou#2095')
 
     if (!args.length) {
@@ -39,7 +38,6 @@ module.exports = {
 	    const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
 	    if (!command) {
-	    	errorEmbed.setTitle(`${message.author.username}, that\'s not a valid command!`);
 				message.channel.send(
 					flashEmbed.display('#FF0000',`${message.author.username},`, `That's not a valid command!`)
 				)

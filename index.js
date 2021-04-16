@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
-
+require('discord-reply');
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
@@ -33,7 +33,6 @@ client.on('ready', async () => {
 client.on('message', (message) => {
   commandHandler.config(client, client.commands, client.cooldowns, message)
 });
-
 
 
 client.login(process.env.DISCORD_BOT_TOKEN);

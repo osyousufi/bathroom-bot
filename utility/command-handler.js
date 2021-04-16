@@ -52,7 +52,7 @@ module.exports = {
 
       	if (now < expirationTime) {
       		const timeLeft = (expirationTime - now) / 1000;
-      		return message.channel.send(
+      		return message.lineReplyNoMention(
             flashEmbed.display('#FF0000', `${message.author.username},`, `please wait ${Math.round(timeLeft.toFixed(1))} more second(s) before reusing the \`${command.name}\` command.`)
           );
       	}
@@ -63,7 +63,7 @@ module.exports = {
       try {
         if (command.guildOnly && message.channel.type === 'dm') {
 
-          return message.channel.send(
+          return message.lineReplyNoMention(
             flashEmbed.display('#FF0000', `${message.author.username},`, 'I can\'t execute that command inside DMs!')
           );
 
@@ -73,23 +73,22 @@ module.exports = {
           if (command.usage) {
             reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't provide any arguments! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``);
           }
-          return message.channel.send(reply);
+          return message.lineReplyNoMention(reply);
         }
         else if (command.mention && !message.mentions.users.first()){
           let reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't mention a user!`)
-          errorEmbed.setTitle(reply);
           if (command.usage) {
             reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't mention a user! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``)
           }
-          return message.channel.send(reply);
+          return message.lineReplyNoMention(reply);
 
         } else if (command.perms && !message.member.hasPermission(command.perms)) {
 
-          return message.channel.send(
+          return message.lineReplyNoMention(
             flashEmbed.display('#FF0000', `${message.author.username},`, `You dont have perms for this!`)
           );
         }
-        await command.execute(message, args, profileData, client);
+        await command.execute(message, args, profileData, client, prefix);
       } catch (error) {
         console.error(error);
       }
@@ -111,7 +110,6 @@ module.exports = {
         const prefix = "//"
         messageCheck(prefix);
       }
-
     }
 
 

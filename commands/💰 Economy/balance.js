@@ -6,7 +6,7 @@ module.exports = {
   name: 'balance',
   description: 'List balance of user',
   usage: '<@username>',
-  aliases: ['bal'],
+  aliases: ['bal', 'money', 'cash', 'wallet', 'bank'],
   async execute(message, args, profileData) {
 
     const taggedUser = message.mentions.users.first();
@@ -28,11 +28,11 @@ module.exports = {
       }
 
       try {
-        await message.channel.send(
-          flashEmbed.display('#00FF00', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.rupees}\`** rupees \nBank: **\`${taggedProfileData.bank}\`** rupees`)
+        await message.lineReplyNoMention(
+          flashEmbed.display('#00FF00', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.rupees}\`** rupees \n\nBank: **\`${taggedProfileData.bank}\`** rupees`)
         );
       } catch (err) {
-          await message.channel.send(
+          await message.lineReplyNoMention(
             flashEmbed.display('#000000', `${message.author.username},`, `Balance has been configured, use this command again.`)
           );
       }
@@ -42,10 +42,10 @@ module.exports = {
 
       try {
         await message.channel.send(
-          flashEmbed.display('#00FF00', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.rupees}\`** rupees \nBank: **\`${profileData.bank}\`** rupees`)
+          flashEmbed.display('#00FF00', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.rupees}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
         );
       } catch (err) {
-        await message.channel.send(
+        await message.lineReplyNoMention(
           flashEmbed.display('#000000', `${message.author.username},`, `Balance has been configured, use this command again.`)
         );
       }

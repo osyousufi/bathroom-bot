@@ -11,16 +11,40 @@ module.exports = {
 
     const amount = args[0];
 
-    if(amount % 1 != 0 || amount <= 0) return message.channel.send('deposit must be positive whole number')
-
     try {
-      if (amount > profileData.rupees) return message.channel.send('you dont have that much lol')
+      if (amount == 'all') {
+        if (profileData.rupees == 0) {
+          return message.lineReplyNoMention(
+            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
+          )
+        }
+        await profileModel.findOneAndUpdate({
+          userID: message.author.id
+        }, { $inc: { rupees: -profileData.rupees, bank: +profileData.rupees }});
+
+        return message.channel.send(
+          flashEmbed.display('#00FF00', `${message.author.username},`, `Desposted **\`${Number(profileData.rupees).toString()}\`** rupees from your wallet!`)
+        )
+      }
+
+      if(amount % 1 !== 0 || amount <= 0) {
+        return message.lineReplyNoMention(
+          flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number!`)
+        )
+      } else if (amount > profileData.rupees) {
+        return message.lineReplyNoMention(
+          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAoo!`)
+        )
+      }
+
       await profileModel.findOneAndUpdate({
         userID: message.author.id
       }, { $inc: { rupees: -amount, bank: amount }}
     )
 
-      return message.channel.send(`you deposited ${amount} of coins into your bank!`)
+      return message.lineReplyNoMention(
+        flashEmbed.display('#00FF00', `${message.author.username},`, `Deposited **\`${Number(amount).toString()}\`** rupees into your bank!`)
+      )
     } catch (e) {
       console.log(e)
     }

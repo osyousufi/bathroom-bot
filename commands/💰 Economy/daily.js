@@ -20,7 +20,7 @@ module.exports = {
       userID: message.author.id
     }, { $inc: {rupees: dailyValue} });
 
-    await message.channel.send(
+    await message.lineReplyNoMention(
       flashEmbed.display('#00FF00',`${message.author.username},`, `you received your daily stimulus of **\`${dailyValue}\`** rupees!`)
     );
 

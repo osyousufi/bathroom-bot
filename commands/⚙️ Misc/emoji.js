@@ -11,7 +11,7 @@ module.exports = {
 
     const emoji = client.emojis.cache.find(emoji => emoji.name == args);
     if (!emoji) {
-      return message.channel.send(
+      return message.lineReplyNoMention(
         flashEmbed.display('#FF0000', `${message.author.username},`, `Emoji not found. Emojis are case sensitive. Bot must also be in the same server as the emoji!`)
       )
     } else {
