@@ -1,17 +1,13 @@
 const Discord = require('discord.js');
 const prefixModel = require('../models/prefixSchema');
-const sheeshModel = require("../models/sheeshSchema");
 const profileModel = require("../models/profileSchema");
 const flashEmbed = require('./flash-embed.js');
+const prettyMilliseconds = require('pretty-ms');
 
 module.exports = {
   async config(client, commands, cooldowns, message) {
 
     const messageCheck = async (prefix) => {
-
-      if (message.content === 'SHEESH' && message.channel.id == 825656630115827712) {
-        await sheeshModel.findByIdAndUpdate("60739b967d146e235000dfc4", {$inc: {Count: 1} });
-      }
 
       //check for profile data, if none, create one
       let profileData;
@@ -49,11 +45,14 @@ module.exports = {
 
       if (timestamps.has(message.author.id)) {
         const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
       	if (now < expirationTime) {
-      		const timeLeft = (expirationTime - now) / 1000;
+      		const timeLeft = (expirationTime - now);
+          const formattedTime = prettyMilliseconds(Math.round(timeLeft), {
+            verbose: true,
+            unitCount: 2,
+          });
       		return message.lineReplyNoMention(
-            flashEmbed.display('#FF0000', `${message.author.username},`, `please wait ${Math.round(timeLeft.toFixed(1))} more second(s) before reusing the \`${command.name}\` command.`)
+            flashEmbed.display('red', `${message.author.username},`, `please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
           );
       	}
       }
@@ -64,28 +63,28 @@ module.exports = {
         if (command.guildOnly && message.channel.type === 'dm') {
 
           return message.lineReplyNoMention(
-            flashEmbed.display('#FF0000', `${message.author.username},`, 'I can\'t execute that command inside DMs!')
+            flashEmbed.display('red', `${message.author.username},`, 'I can\'t execute that command inside DMs!')
           );
 
         }
         else if (command.args && !args.length) {
-          let reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't provide any arguments!`);
+          let reply = flashEmbed.display('red', `${message.author.username},`, `You didn't provide any arguments!`);
           if (command.usage) {
-            reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't provide any arguments! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``);
+            reply = flashEmbed.display('red', `${message.author.username},`, `You didn't provide any arguments! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``);
           }
           return message.lineReplyNoMention(reply);
         }
         else if (command.mention && !message.mentions.users.first()){
-          let reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't mention a user!`)
+          let reply = flashEmbed.display('red', `${message.author.username},`, `You didn't mention a user!`)
           if (command.usage) {
-            reply = flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't mention a user! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``)
+            reply = flashEmbed.display('red', `${message.author.username},`, `You didn't mention a user! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``)
           }
           return message.lineReplyNoMention(reply);
 
         } else if (command.perms && !message.member.hasPermission(command.perms)) {
 
           return message.lineReplyNoMention(
-            flashEmbed.display('#FF0000', `${message.author.username},`, `You dont have perms for this!`)
+            flashEmbed.display('red', `${message.author.username},`, `You dont have perms for this!`)
           );
         }
         await command.execute(message, args, profileData, client, prefix);

@@ -6,7 +6,7 @@ module.exports = {
   name: "prefix",
   guildOnly: true,
   aliases: ['sp', 'setprefix'],
-  // perms: 'ADMINISTRATOR',
+  perms: 'ADMINISTRATOR',
   async execute(message, args) {
 
     const data = await prefixModel.findOne({
