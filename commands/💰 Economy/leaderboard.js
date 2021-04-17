@@ -5,24 +5,28 @@ const Discord = require('discord.js');
 module.exports = {
   name: "leaderboard",
   aliases: ['lb', 'rich', 'richest'],
+  cooldown: 10,
   description: "Display leaderboard for the guild.",
   async execute(message, args, profileData, client) {
 
     try {
-      
+
       let usersArr = [];
-      const memberData = await profileModel.find({}, (err, users) => {
+      await profileModel.find({}, (err, users) => {
+         if (err) {
+           console.log(err)
+         } else {
+           users.forEach(async (user) => {
+             const userName = await client.users.fetch(user.userID);
+             const netWorth = await (user.rupees + user.bank);
+             let userObj = {
+               userName: userName.username,
+               netWorth: netWorth
+             }
 
-        users.forEach(async (user) => {
-          const userName = await client.users.fetch(user.userID);
-          const netWorth = user.rupees + user.bank;
-          let userObj = {
-            userName: userName.username,
-            netWorth: netWorth
-          }
-
-          await usersArr.push(userObj);
-        })
+             await usersArr.push(userObj);
+           })
+         }
 
       });
 
@@ -30,14 +34,14 @@ module.exports = {
       usersArr.sort((a, b) => b.netWorth - a.netWorth);
       usersArr = usersArr.slice(0, 10);
 
-      const lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:')
+      const lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('#00FF00');
       for (let index = 0; index < usersArr.length; index++) {
-        lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].netWorth}\` rupees`)
+        lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].netWorth}\` rupees`);
       }
+
+      await message.lineReplyNoMention(lbEmbed)
       usersArr = usersArr
-      await setTimeout(() => {
-        return message.lineReplyNoMention(lbEmbed)
-      }, 2000)
+      return
 
     } catch (e) {
       console.log(err)

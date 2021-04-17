@@ -12,6 +12,9 @@ const profileSchema = new mongoose.Schema({
   },
   bank: {
     type: Number
+  },
+  inventory: {
+    type: Array
   }
 });
 

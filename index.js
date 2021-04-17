@@ -26,6 +26,7 @@ mongoose.connect(process.env.MONGO_PATH, {
 client.on('ready', async () => {
   commandLoader.load(client, client.commands);
   eventHandler.load(client);
+  client.user.setActivity("//help | WIP!"); 
 	console.log('Ready!');
 
 });

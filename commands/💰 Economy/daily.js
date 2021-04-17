@@ -15,7 +15,7 @@ module.exports = {
     }, { $inc: {rupees: dailyValue} });
 
     await message.lineReplyNoMention(
-      flashEmbed.display('#00FF00',`${message.author.username},`, `you received your daily stimulus of **\`${dailyValue}\`** rupees!`)
+      flashEmbed.display('green',`${message.author.username},`, `you received your daily stimulus of **\`${dailyValue}\`** rupees!`)
     );
 
   }
