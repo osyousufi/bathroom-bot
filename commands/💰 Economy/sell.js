@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const flashEmbed = require('../../utility/flash-embed.js');
 const profileModel = require('../../models/profileSchema');
-const storeItems = require('./storeItems');
+const storeItems = require('../secret/storeItems');
 
 module.exports = {
   name: "sell",

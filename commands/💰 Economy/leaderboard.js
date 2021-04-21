@@ -11,6 +11,7 @@ module.exports = {
 
     try {
 
+      message.channel.send('WARNING! leaderboard can be wiped at any time during development!')
       let usersArr = [];
       await profileModel.find({}, (err, users) => {
          if (err) {

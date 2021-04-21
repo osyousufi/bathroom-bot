@@ -9,8 +9,8 @@ module.exports = {
   async execute(message, args, profileData) {
 
     const invEmbed = new Discord.MessageEmbed()
-      .setTitle(`${message.author.username}'s inventory:`)
 
+    const maxSpace = 10;
     const response = await profileModel.findOne({
       userID: message.author.id
     }, (err, res) => {
@@ -20,15 +20,15 @@ module.exports = {
 
         if (!res.inventory.length) {
           return message.channel.send(
-            flashEmbed.display('green',`${message.author.username}'s inventory:`, `Nothing here 😢`)
+            flashEmbed.display('green',`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`, `Nothing here 😢`)
           )
         } else {
+          invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
           for (let item of res.inventory) {
-            invEmbed.addField(`__${item.itemName}__`, `Price: \`${item.price}\` rupees`)
+            invEmbed.addField(`__${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
           }
           return message.channel.send(invEmbed)
         }
-        console.log(res.inventory)
       } else {
         return message.lineReplyNoMention(
           flashEmbed.display('#000000', `${message.author.username},`, `Inventory has been configured, use this command again.`)

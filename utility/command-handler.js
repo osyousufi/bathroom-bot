@@ -34,31 +34,7 @@ module.exports = {
       const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
       if (!command) return; //or return in message.author.channel: this command doesn't exist
 
-      const { cooldowns } = client;
 
-      if (!cooldowns.has(command.name)) {
-      	cooldowns.set(command.name, new Discord.Collection());
-      }
-
-      const now = Date.now();
-      const timestamps = cooldowns.get(command.name);
-      const cooldownAmount = (command.cooldown || 2) * 1000;
-
-      if (timestamps.has(message.author.id)) {
-        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-      	if (now < expirationTime) {
-      		const timeLeft = (expirationTime - now);
-          const formattedTime = prettyMilliseconds(Math.round(timeLeft), {
-            verbose: true,
-            unitCount: 2,
-          });
-      		return message.lineReplyNoMention(
-            flashEmbed.display('red', `${message.author.username},`, `please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
-          );
-      	}
-      }
-      timestamps.set(message.author.id, now);
-      setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
       try {
         if (command.guildOnly && message.channel.type === 'dm') {
@@ -88,6 +64,33 @@ module.exports = {
             flashEmbed.display('red', `${message.author.username},`, `You dont have perms for this!`)
           );
         }
+
+        const { cooldowns } = client;
+
+        if (!cooldowns.has(command.name)) {
+        	cooldowns.set(command.name, new Discord.Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = cooldowns.get(command.name);
+        const cooldownAmount = (command.cooldown || 2) * 1000;
+
+        if (timestamps.has(message.author.id)) {
+          const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+        	if (now < expirationTime) {
+        		const timeLeft = (expirationTime - now);
+            const formattedTime = prettyMilliseconds(Math.round(timeLeft), {
+              verbose: true,
+              unitCount: 2,
+            });
+        		return message.lineReplyNoMention(
+              flashEmbed.display('red', `${message.author.username},`, `please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
+            );
+        	}
+        }
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+        
         await command.execute(message, args, profileData, client, prefix);
       } catch (error) {
         console.error(error);

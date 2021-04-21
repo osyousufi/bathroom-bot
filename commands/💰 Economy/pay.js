@@ -26,10 +26,14 @@ module.exports = {
         return message.lineReplyNoMention(
           flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAo`)
         )
+      } else if (taggedUser == message.author) {
+        return message.lineReplyNoMention(
+          flashEmbed.display('#FF0000', `${message.author.username},`, `Why are you paying money to yourself? Loser!`)
+        )
       }
 
-      taggedProfileData = await profileModel.findOne({ userID: taggedUser.id });
-      if(!taggedProfileData) {
+      const taggedProfileData = await profileModel.findOne({ userID: taggedUser.id });
+      if (!taggedProfileData) {
         let profile = await profileModel.create({
           userID: taggedUser.id,
           rupees: 1000,

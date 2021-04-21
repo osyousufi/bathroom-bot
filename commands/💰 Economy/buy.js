@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const flashEmbed = require('../../utility/flash-embed.js');
 const profileModel = require('../../models/profileSchema');
-const storeItems = require('./storeItems');
+const storeItems = require('../secret/storeItems');
 
 module.exports = {
   name: "buy",
@@ -19,7 +19,7 @@ module.exports = {
 
     for (let product of storeItems.list) {
       if (Object.values(product).includes(item)) {
-        if (profileData.rupees < product.price) {
+        if (profileData.rupees < product.itemPrice) {
           return message.lineReplyNoMention(
             flashEmbed.display('red', `${message.author.username},`, `You do not have enough money to buy this item!`)
           );
@@ -44,10 +44,10 @@ module.exports = {
 
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: { rupees: -product.price} });
+        }, { $inc: { rupees: -product.itemPrice} });
 
         return message.lineReplyNoMention(
-          flashEmbed.display('green', `${message.author.username},`, `Successfully purchased __${product.itemName}__ for \`${product.price}\` rupees!`)
+          flashEmbed.display('green', `${message.author.username},`, `Successfully purchased __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
