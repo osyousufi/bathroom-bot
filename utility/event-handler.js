@@ -11,7 +11,8 @@ module.exports = {
       let profile = await profileModel.create({
         userID: member.id,
         rupees: 1400,
-        bank: 0
+        bank: 0,
+        inventory: []
       });
       profile.save();
 

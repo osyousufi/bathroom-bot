@@ -63,7 +63,7 @@ module.exports = {
         }
 
         return message.lineReplyNoMention(
-          flashEmbed.display('red', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou get searched and removed of evidence!`)
+          flashEmbed.display('red', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou get searched and removed of anything used in the robbery!`)
         )
       }
     }
