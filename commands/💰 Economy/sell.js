@@ -34,21 +34,17 @@ module.exports = {
 
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: { rupees: product.price} });
+        }, { $inc: { rupees: product.itemPrice} });
 
         return message.lineReplyNoMention(
-          flashEmbed.display('green', `${message.author.username},`, `Successfully sold __${product.itemName}__ for \`${product.price}\` rupees!`)
+          flashEmbed.display('green', `${message.author.username},`, `Successfully sold __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
 
-
     return message.lineReplyNoMention(
       flashEmbed.display('red', `${message.author.username},`, `This item is not in your inventory!`)
     );
-
-
-
 
   }
 }

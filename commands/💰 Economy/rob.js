@@ -8,8 +8,8 @@ module.exports = {
   mention: true,
   usage: '<@username>',
   aliases: ['steal'],
-  description: "Rob a user",
-  // cooldown: 300,
+  description: "Rob a user. Having a gun increases the chance!",
+  cooldown: 600,
   async execute(message, args, profileData, client, prefix) {
 
     const taggedUser = message.mentions.users.first();
