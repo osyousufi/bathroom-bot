@@ -17,21 +17,20 @@ module.exports = {
       }, { $inc: {rupees: donation} });
 
       if (donation > 50) {
-        await message.lineReplyNoMention(
+        await message.lineReply(
           flashEmbed.display('green',`${message.author.username},`, `You begged and recieved **\`${donation}\`** rupees! \nKeep this up and you might become a millionaire!`)
         );
       } else {
-        await message.lineReplyNoMention(
+        await message.lineReply(
           flashEmbed.display('green',`${message.author.username},`, `You begged and recieved **\`${donation}\`** rupees!`)
         );
       }
 
     } else {
-      await message.lineReplyNoMention(
-        flashEmbed.display('red',`${message.author.username},`, `You tried begging for some meager rupees, but you ended up getting curbstomped by a rich white guy in a suit!`)
+      await message.lineReply(
+        flashEmbed.display('red',`${message.author.username},`, `You tried begging for some meager rupees, but you ended up getting curbstomped by a rich guy in a suit!`)
       );
     }
-
 
 
   }

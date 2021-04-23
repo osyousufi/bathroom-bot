@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const flashEmbed = require('../../utility/flash-embed.js');
 const profileModel = require('../../models/profileSchema');
-const storeItems = require('../secret/storeItems');
+const storeItems = require('../commandUtil/storeItems');
 
 module.exports = {
   name: "sell",
@@ -26,7 +26,7 @@ module.exports = {
             res.inventory.pop(product)
             res.save()
           } else {
-            return message.lineReplyNoMention(
+            return message.lineReply(
               flashEmbed.display('#000000', `${message.author.username},`, `Inventory has been configured, use this command again.`)
             );
           }
@@ -36,13 +36,13 @@ module.exports = {
           userID: message.author.id
         }, { $inc: { rupees: product.itemPrice} });
 
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('green', `${message.author.username},`, `Successfully sold __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
 
-    return message.lineReplyNoMention(
+    return message.lineReply(
       flashEmbed.display('red', `${message.author.username},`, `This item is not in your inventory!`)
     );
 

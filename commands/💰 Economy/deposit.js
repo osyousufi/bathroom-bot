@@ -13,7 +13,7 @@ module.exports = {
 
     try {
       if (amount == 'all') {
-        if (profileData.rupees == 0) {
+        if (profileData.rupees <= 0) {
           return message.lineReplyNoMention(
             flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
           )
@@ -23,7 +23,7 @@ module.exports = {
         }, { $inc: { rupees: -profileData.rupees, bank: +profileData.rupees }});
 
         return message.channel.send(
-          flashEmbed.display('#00FF00', `${message.author.username},`, `Desposted **\`${Number(profileData.rupees).toString()}\`** rupees from your wallet!`)
+          flashEmbed.display('#00FF00', `${message.author.username},`, `Desposited **\`${Number(profileData.rupees).toString()}\`** rupees from your wallet!`)
         )
       }
 

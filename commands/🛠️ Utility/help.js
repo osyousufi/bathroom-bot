@@ -14,7 +14,7 @@ module.exports = {
 
 		const helpEmbed = new Discord.MessageEmbed()
 			.setAuthor('Bathroom Bot', 'https://i.imgur.com/JDkzvGC.png')
-			.setFooter('Developed by: osyou#2095')
+			.setFooter('© osyou#2095', 'https://i.imgur.com/KvMvzOm.png')
 
     if (!args.length) {
 
@@ -31,14 +31,14 @@ module.exports = {
 				}
 			}
 			helpEmbed.setDescription(`You can send **\`${prefix}help <command name>\`** to get info on a specific command!`)
-			message.channel.send(helpEmbed)
+			return message.channel.send(helpEmbed)
 
     } else {
 			const name = args[0].toLowerCase();
 	    const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
 	    if (!command) {
-				message.channel.send(
+				message.lineReply(
 					flashEmbed.display('#FF0000',`${message.author.username},`, `That's not a valid command!`)
 				)
 	    }
@@ -50,7 +50,7 @@ module.exports = {
 				if (command.description) helpEmbed.addField(`***Description:***`, `${command.description}`)
 				if (command.aliases) helpEmbed.addField(`***Aliases:***`, `${command.aliases.join(', ')}`);
 				if (command.usage) helpEmbed.addField(`***Usage:***`, `${prefix}${command.name} ${command.usage}`)
-				message.channel.send(helpEmbed);
+				return message.channel.send(helpEmbed);
 			}
 		}
 

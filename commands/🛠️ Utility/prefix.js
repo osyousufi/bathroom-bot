@@ -14,13 +14,13 @@ module.exports = {
     });
 
     if (!args[0]) {
-      return message.channel.send(
+      return message.lineReply(
         flashEmbed.display('#000000', `${message.author.username},`, `Current prefix is: **\`${data ? data.Prefix : '//'}\`**`)
       );
     }
 
     if (args[0].length > 5) {
-      return message.channel.send(
+      return message.lineReply(
         flashEmbed.display('#FF0000', `${message.author.username},`, 'Your new prefix must be under \`5\` characters!')
       );
     }
@@ -30,7 +30,7 @@ module.exports = {
             GuildID: message.guild.id
         });
 
-        message.channel.send(
+        message.lineReply(
           flashEmbed.display('#00FF00', `${message.author.username},`, `The new prefix is now **\`${args[0]}\`**`)
         );
 
@@ -40,7 +40,7 @@ module.exports = {
         });
         newData.save();
     } else if (!data) {
-        message.channel.send(
+        message.lineReply(
           flashEmbed.display('#00FF00', `${message.author.username},`, `The new prefix is now **\`${args[0]}\`**`)
         );
 
@@ -50,8 +50,6 @@ module.exports = {
         });
         newData.save();
     }
-
-
 
   }
 }

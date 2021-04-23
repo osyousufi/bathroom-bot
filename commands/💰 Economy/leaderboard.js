@@ -5,13 +5,11 @@ const Discord = require('discord.js');
 module.exports = {
   name: "leaderboard",
   aliases: ['lb', 'rich', 'richest'],
-  cooldown: 10,
+  cooldown: 5,
   description: "Display leaderboard for the guild.",
   async execute(message, args, profileData, client) {
 
     try {
-
-      message.channel.send('WARNING! leaderboard can be wiped at any time during development!')
       let usersArr = [];
       await profileModel.find({}, (err, users) => {
          if (err) {
@@ -31,7 +29,6 @@ module.exports = {
 
       });
 
-
       usersArr.sort((a, b) => b.netWorth - a.netWorth);
       usersArr = usersArr.slice(0, 10);
 
@@ -40,15 +37,11 @@ module.exports = {
         lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].netWorth}\` rupees`);
       }
 
-      await message.lineReplyNoMention(lbEmbed)
-      usersArr = usersArr
-      return
+      return await message.lineReplyNoMention(lbEmbed)
 
     } catch (e) {
       console.log(err)
     }
-
-
 
   }
 }

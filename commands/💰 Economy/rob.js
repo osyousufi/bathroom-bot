@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const flashEmbed = require('../../utility/flash-embed.js');
 const profileModel = require("../../models/profileSchema");
 const chance = new (require('chance'))();
+const profileHandler = require('../../utility/profile-handler.js');
 
 module.exports = {
   name: "rob",
@@ -9,7 +10,7 @@ module.exports = {
   usage: '<@username>',
   aliases: ['steal'],
   description: "Rob a user. Having a gun increases the chance!",
-  cooldown: 600,
+  cooldown: 300,
   async execute(message, args, profileData, client, prefix) {
 
     const taggedUser = message.mentions.users.first();
@@ -21,17 +22,11 @@ module.exports = {
 
         const taggedProfileData = await profileModel.findOne({ userID: taggedUser.id });
         if(!taggedProfileData) {
-          let profile = await profileModel.create({
-            userID: taggedUser.id,
-            rupees: 1000,
-            bank: 0,
-            inventory: []
-          });
-          profile.save();
+          profileHandler.set(profileModel, taggedUser)
         }
 
         if (taggedProfileData.rupees <= 0) {
-          return message.lineReplyNoMention(
+          return message.lineReply(
             flashEmbed.display('red', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou run away and get rid of any evidence!`)
           )
         }
@@ -44,7 +39,7 @@ module.exports = {
           userID: taggedUser.id
         }, { $inc: { rupees: -taggedProfileData.rupees }});
 
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole ${taggedProfileData.rupees} rupees \nYou run away and get rid of any evidence!`)
         )
       } else {
@@ -62,7 +57,7 @@ module.exports = {
           }, { $inc: { rupees: -fineAmmount }});
         }
 
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('red', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou get searched and removed of anything used in the robbery!`)
         )
       }
@@ -71,7 +66,7 @@ module.exports = {
 
     try {
       if (taggedUser == message.author) {
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Why are you robbing yourself? Loser!`)
         )
       }
@@ -102,7 +97,7 @@ module.exports = {
 
           collector.on('end', mCollected => {
             if (mCollected.size < questions.length) {
-              return message.lineReplyNoMention (
+              return message.lineReply (
                 flashEmbed.display('#FF0000', `${message.author.username},`, `You did not answer in time!`)
               )
             }
@@ -111,7 +106,7 @@ module.exports = {
             mCollected.forEach(async (value) => {
               let confirmResult = value.content;
               if (!validResult.includes(confirmResult)) {
-                return message.lineReplyNoMention(
+                return message.lineReply(
                   flashEmbed.display('#FF0000', `${message.author.username},`, `Please enter a valid response!`)
                 )
               } else if (confirmResult == 'yes' || confirmResult == 'y') {

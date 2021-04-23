@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const storeItems = require('../secret/storeItems');
+const storeItems = require('../commandUtil/storeItems');
 
 module.exports = {
   name: "store",
@@ -15,6 +15,6 @@ module.exports = {
       storeEmbed.addField(`__${item.itemIcon} ${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`);
     }
 
-    message.channel.send(storeEmbed);
+    return message.channel.send(storeEmbed);
   }
 }

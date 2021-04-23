@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const flashEmbed = require('../../utility/flash-embed.js');
 const profileModel = require('../../models/profileSchema');
-const storeItems = require('../secret/storeItems');
+const storeItems = require('../commandUtil/storeItems');
 
 module.exports = {
   name: "buy",
@@ -20,11 +20,11 @@ module.exports = {
     for (let product of storeItems.list) {
       if (Object.values(product).includes(item)) {
         if (profileData.rupees < product.itemPrice) {
-          return message.lineReplyNoMention(
+          return message.lineReply(
             flashEmbed.display('red', `${message.author.username},`, `You do not have enough money to buy this item!`)
           );
         } else if (profileData.inventory.length >= 10) {
-          return message.lineReplyNoMention(
+          return message.lineReply(
             flashEmbed.display('red', `${message.author.username},`, `Your inventory is full!`)
           );
         }
@@ -36,7 +36,7 @@ module.exports = {
             res.inventory.push(product)
             res.save()
           } else {
-            return message.lineReplyNoMention(
+            return message.lineReply(
               flashEmbed.display('#000000', `${message.author.username},`, `Inventory has been configured, use this command again.`)
             );
           }
@@ -46,19 +46,16 @@ module.exports = {
           userID: message.author.id
         }, { $inc: { rupees: -product.itemPrice} });
 
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('green', `${message.author.username},`, `Successfully purchased __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
 
 
-    return message.lineReplyNoMention(
+    return message.lineReply(
       flashEmbed.display('red', `${message.author.username},`, `This item is not in the store!`)
     );
-
-
-
 
   }
 }

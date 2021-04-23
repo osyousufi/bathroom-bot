@@ -29,7 +29,7 @@ module.exports = {
           return message.channel.send(invEmbed)
         }
       } else {
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('#000000', `${message.author.username},`, `Inventory has been configured, use this command again.`)
         );
       }

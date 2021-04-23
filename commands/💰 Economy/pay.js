@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const flashEmbed = require('../../utility/flash-embed.js');
 const profileModel = require("../../models/profileSchema");
+const profileHandler = require('../../utility/profile-handler.js');
 
 module.exports = {
   name: "pay",
@@ -15,32 +16,26 @@ module.exports = {
 
     try {
       if (!amount) {
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Please specify an amount to pay!`)
         )
       } else if (amount % 1 !== 0 || amount <= 0) {
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number! \nThe proper usage would be: \`${prefix}<@username> <amount>\``)
         )
       } else if (amount > profileData.rupees) {
-        return message.lineReplyNoMention(
-          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAo`)
+        return message.lineReply(
+          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
         )
       } else if (taggedUser == message.author) {
-        return message.lineReplyNoMention(
-          flashEmbed.display('#FF0000', `${message.author.username},`, `Why are you paying money to yourself? Loser!`)
+        return message.lineReply(
+          flashEmbed.display('#FF0000', `${message.author.username},`, `Why are you paying money to yourself?`)
         )
       }
 
       const taggedProfileData = await profileModel.findOne({ userID: taggedUser.id });
       if (!taggedProfileData) {
-        let profile = await profileModel.create({
-          userID: taggedUser.id,
-          rupees: 1000,
-          bank: 0,
-          inventory: []
-        });
-        profile.save();
+        profileHandler.set(profileModel, taggedUser);
       }
 
       let counter = 0
@@ -62,20 +57,17 @@ module.exports = {
       });
 
       collector.on('end', mCollected => {
-        // console.log(`collected ${mCollected.size} messages`);
         if (mCollected.size < questions.length) {
-          return message.lineReplyNoMention (
+          return message.lineReply (
             flashEmbed.display('#FF0000', `${message.author.username},`, `You did not answer in time!`)
           )
         }
 
-        // let counter = 0;
         const validResult = ['yes', 'no', 'y', 'n'];
         mCollected.forEach(async (value) => {
-          // console.log(questions[counter++], value.content)
           let confirmResult = value.content;
           if (!validResult.includes(confirmResult)) {
-            return message.lineReplyNoMention(
+            return message.lineReply(
               flashEmbed.display('#FF0000', `${message.author.username},`, `Please enter a valid response!`)
             )
           } else if (confirmResult == 'yes' || confirmResult == 'y') {
@@ -93,7 +85,7 @@ module.exports = {
             )
 
           } else {
-            message.lineReplyNoMention(
+            message.lineReply(
               flashEmbed.display('#FF0000', `${message.author.username},`, `Canceled payment.`)
             )
           }

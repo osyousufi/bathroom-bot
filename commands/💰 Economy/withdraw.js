@@ -14,7 +14,7 @@ module.exports = {
     try {
       if (amount == 'all') {
         if (profileData.bank == 0) {
-          return message.lineReplyNoMention(
+          return message.lineReply(
             flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your bank! broke mf!! LOL`)
           )
         }
@@ -28,11 +28,11 @@ module.exports = {
       }
 
       if(amount % 1 !== 0 || amount <= 0) {
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number!`)
         )
       } else if (amount > profileData.bank) {
-        return message.lineReplyNoMention(
+        return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAo`)
         )
       }
@@ -42,7 +42,7 @@ module.exports = {
       }, { $inc: { rupees: +amount, bank: -amount }});
 
 
-      return message.lineReplyNoMention(
+      return message.lineReply(
         flashEmbed.display('#00FF00', `${message.author.username},`, `Withdrew **\`${Number(amount).toString()}\`** rupees from your bank!`)
       )
     } catch (e) {
