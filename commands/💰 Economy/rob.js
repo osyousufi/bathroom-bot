@@ -40,7 +40,7 @@ module.exports = {
         }, { $inc: { rupees: -taggedProfileData.rupees }});
 
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole ${taggedProfileData.rupees} rupees \nYou run away and get rid of any evidence!`)
+          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.rupees}\` rupees \nYou run away and get rid of any evidence!`)
         )
       } else {
 

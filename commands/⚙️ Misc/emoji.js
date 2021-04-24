@@ -5,14 +5,13 @@ module.exports = {
   name: "emoji",
   description: "Retrieve a custom emoji from a server that bathroom bot is in!",
   args: true,
-  usage: '<emoji name> <text>(optional, null) react(optional)',
+  usage: '<emoji name> react(optional)',
   aliases: ['emote', 'emoticon'],
   async execute(message, args, profileData, client) {
 
     try {
 
       const emoji = client.emojis.cache.find(emoji => emoji.name == args[0]);
-      const text = args[1];
 
       if (!emoji) {
         message.delete();
@@ -34,14 +33,8 @@ module.exports = {
           });
           return
         } else {
-
           message.delete();
-          if (text === 'none', text === 'null') {
-            return message.channel.send(`${emoji}`);
-          } else {
-            return message.channel.send(`${text} ${emoji}`);
-          }
-
+          return message.channel.send(`${emoji}`);
         }
       }
 
