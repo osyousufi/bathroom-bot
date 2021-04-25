@@ -14,6 +14,7 @@ module.exports = {
       let profileData;
       try {
         profileData = await profileModel.findOne({ userID: message.author.id });
+        
         if(!profileData) {
           profileHandler.set(profileModel, message.author);
         }

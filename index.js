@@ -11,6 +11,7 @@ const commandHandler = require('./utility/command-handler');
 const commandLoader = require('./utility/command-loader');
 const eventHandler = require('./utility/event-handler');
 
+module.exports = client;
 
 mongoose.connect(process.env.MONGO_PATH, {
     useNewUrlParser: true,
@@ -26,7 +27,7 @@ mongoose.connect(process.env.MONGO_PATH, {
 client.on('ready', async () => {
   commandLoader.load(client, client.commands);
   eventHandler.load(client);
-  client.user.setActivity("//help | WIP!"); 
+  client.user.setActivity("//help | WIP!");
 	console.log('Ready!');
 
 });

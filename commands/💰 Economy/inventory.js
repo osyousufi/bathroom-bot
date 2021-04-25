@@ -24,7 +24,7 @@ module.exports = {
         } else {
           invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
           for (let item of res.inventory) {
-            invEmbed.addField(`__${item.itemIcon} ${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
+            invEmbed.addField(`${item.itemIcon} __${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
           }
           return message.channel.send(invEmbed)
         }

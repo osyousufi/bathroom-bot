@@ -12,14 +12,16 @@ module.exports = {
     const data = [];
     const { commands } = message.client;
 
+		const imageUrl = client.users.cache.find(user => user.id == '267504730341769219').displayAvatarURL();
+
 		const helpEmbed = new Discord.MessageEmbed()
-			.setAuthor('Bathroom Bot', 'https://i.imgur.com/JDkzvGC.png')
-			.setFooter('© osyou#2095', 'https://i.imgur.com/KvMvzOm.png')
+			.setAuthor('Bathroom Bot', `${client.user.displayAvatarURL()}`)
+			.setFooter('© osyou#2095', `${imageUrl}`)
 
     if (!args.length) {
 
 			for (let folder of commandFolders) {
-				if (folder == 'secret') {
+				if (folder == 'commandUtil') {
 				} else {
 					const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
 					let commandStorage  = [];
@@ -39,7 +41,7 @@ module.exports = {
 
 	    if (!command) {
 				message.lineReply(
-					flashEmbed.display('#FF0000',`${message.author.username},`, `That's not a valid command!`)
+					flashEmbed.display('red',`${message.author.username},`, `That's not a valid command!`)
 				)
 	    }
 

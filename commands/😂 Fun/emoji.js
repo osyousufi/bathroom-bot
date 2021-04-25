@@ -5,7 +5,7 @@ module.exports = {
   name: "emoji",
   description: "Retrieve a custom emoji from a server that bathroom bot is in!",
   args: true,
-  usage: '<emoji name> react(optional)',
+  usage: '<emoji name> [r(optional), id(optional)]',
   aliases: ['emote', 'emoticon'],
   async execute(message, args, profileData, client) {
 
@@ -19,7 +19,7 @@ module.exports = {
           flashEmbed.display('#FF0000', `${message.author.username},`, `Emoji not found. Emojis are case sensitive. Bot must also be in the same server as the emoji!`)
         )
       } else {
-        if (args[2] === 'react' || args[2] === 'r') {
+        if (args[1] === 'r' || args[1] === 'react') {
           await message.delete();
           message.client.channels.fetch(message.channel.id).then(channel => {
             channel.messages.fetch({limit: 1}).then(async message => {
@@ -32,6 +32,9 @@ module.exports = {
             })
           });
           return
+        } else if (args[1] === 'id') {
+          await message.delete();
+          return message.channel.send(`${emoji.id}`);
         } else {
           message.delete();
           return message.channel.send(`${emoji}`);

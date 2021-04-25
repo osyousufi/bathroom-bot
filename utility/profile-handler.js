@@ -4,7 +4,8 @@ module.exports = {
           userID: user.id,
           rupees: 1000,
           bank: 0,
-          inventory: []
+          inventory: [],
+          bjStats: {wins: 0, losses: 0},
         });
         profile.save();
   }

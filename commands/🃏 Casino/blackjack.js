@@ -17,8 +17,11 @@ module.exports = {
 			const bjEmbed = new Discord.MessageEmbed()
       .setTitle(`${message.author.username}'s blackjack game:`)
 			.setDescription(`Your moves: \`hit\`, \`stand\` or \`exit\` \nBet: \`${amount === 'all' ? profileData.rupees : amount}\` `)
+			.setFooter(`K, Q, J = 10 | A = 1 or 11`);
 
-			if(amount === 'all') {
+
+
+			if(amount.toLowerCase() === 'all') {
 
 				if (profileData.rupees <= 0) {
           return message.lineReply(
@@ -31,9 +34,9 @@ module.exports = {
 	        userID: message.author.id
 	      }, { $inc: {rupees: -amount} })
 
-			} else if (amount % 1 !== 0 || amount <= 0) {
+			} else if (amount % 1 !== 0 || amount < 10) {
 	      return message.lineReply(
-	        flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number! \nThe proper usage would be: \`${prefix}blackjack <amount>\``)
+	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be at least 10! \nThe proper usage would be: \`${prefix}blackjack <amount>\``)
 	      )
 	    } else if (amount > profileData.rupees) {
 	      return message.lineReply(
@@ -54,7 +57,7 @@ module.exports = {
 			let gameOver = false;
 
 
-			const newGame = () => {
+			const newGame = async () => {
 				const suits = ["♠", "♥", "♦", "♣"];
 	    	const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 				for (let suit of suits) {
@@ -76,10 +79,29 @@ module.exports = {
 	    	}
 				shuffleDeck(deck);
 
-
-				playerCards.push(deck.pop());
 				houseCards.push(deck.pop());
 				playerCards.push(deck.pop());
+				playerCards.push(deck.pop());
+
+				//bj debug
+				// playerCards.push({cardValue: 'A', cardSuit: '♦', cardWeight: 11})
+				// playerCards.push({cardValue: '10', cardSuit: '♦', cardWeight: 10})
+
+				if (playerCards.some(card => card.cardWeight == 10)) {
+					if (playerCards.some(card => card.cardValue == 'A')) {
+						gameOver = true;
+
+						await profileModel.findOneAndUpdate({
+			        userID: message.author.id
+			      }, { $inc: {rupees: (amount * 2.5), "bjStats.wins": +1} })
+
+			      await bjEmbed.setDescription('**BLACKJACK!** You win!').setColor('#800080');
+						await message.lineReply(`**You won \`${amount * 1.5}\` rupees! \nYou have: \`${profileData.rupees + parseInt(amount * 1.5)}\` rupees left in your wallet**`);
+						await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
+
+						return await message.channel.send(bjEmbed)
+					}
+				}
 
 			}
 
@@ -174,37 +196,49 @@ module.exports = {
 			}
 
 			const checkWin = async () => {
-
+				bjEmbed.setFooter(` `);
 		    if (playerValue > 21) {
 					gameOver = true;
-		      await bjEmbed.setDescription('Player bust, you lose!').setColor('#FF0000');
-					await message.lineReply(`**You lost \`${amount}\` rupees!**`);
 
+					await profileModel.findOneAndUpdate({
+	        	userID: message.author.id
+	      	}, { $inc: {"bjStats.losses": +1} })
+
+		      await bjEmbed.setDescription('Player bust, you lose!').setColor('#FF0000');
+					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.rupees - parseInt(amount)}\` rupees left in your wallet**`);
+					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins')} || Losses: ${profileData.get('bjStats.losses') + 1}`);
 		    } else if (houseValue > 21) {
 					gameOver = true;
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {rupees: amount * 2} })
+		      }, { $inc: {rupees: amount * 2, "bjStats.wins": +1} })
 
 		     	await bjEmbed.setDescription('House bust, you win!').setColor('#00FF00');
-				 	await message.lineReply(`**You won \`${amount}\` rupees!**`);
+				 	await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.rupees + parseInt(amount)}\` rupees left in your wallet**`);
+					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 		    } else if (playerValue > houseValue && houseCards.length > 1) {
 					gameOver = true;
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {rupees: amount * 2} })
+		      }, { $inc: {rupees: amount * 2, "bjStats.wins": +1} })
 
 		      await bjEmbed.setDescription('You win!').setColor('#00FF00');
-					await message.lineReply(`**You won \`${amount}\` rupees!**`);
-
+					await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.rupees + parseInt(amount)}\` rupees left in your wallet**`);
+					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 		    } else if (houseValue > playerValue && houseCards.length > 1) {
 					gameOver = true;
+
+					await profileModel.findOneAndUpdate({
+	        	userID: message.author.id
+	      	}, { $inc: {"bjStats.losses": +1} })
+
 		      await bjEmbed.setDescription('You lose!').setColor('#FF0000');
-					await message.lineReply(`**You lost \`${amount}\` rupees!**`);
+					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.rupees - parseInt(amount)}\` rupees left in your wallet**`);
+					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins')} || Losses: ${profileData.get('bjStats.losses') + 1}`);
 
 		    } else if (playerValue === houseValue && houseCards.length > 1) {
 					gameOver = true;
@@ -214,9 +248,10 @@ module.exports = {
 		      }, { $inc: {rupees: amount} })
 
 		      await bjEmbed.setDescription('Push!').setColor('#FFFF00');
-					await message.lineReply(`**You got back your \`${amount}\` rupees!**`);
-
+					await message.lineReply(`**You got back your \`${amount}\` rupees! \nYou have: \`${profileData.rupees}\` rupees left in your wallet**`);
+					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins')} || Losses: ${profileData.get('bjStats.losses')}`);
 		    }
+
 
 		  }
 
@@ -225,8 +260,8 @@ module.exports = {
 					message.channel.awaitMessages(m => m.author.id == message.author.id, {
 						max: 1,
 						time: 1000 * 15
-					}).then(async collected  => {
-						const action = collected.first().content;
+					}).then(collected  => {
+						const action = collected.first().content.toLowerCase();
 
 						if (action === 'hit' || action === 'h') {
 							hit();
@@ -240,22 +275,23 @@ module.exports = {
 							stand();
 							displayUI();
 							checkWin();
+
 							if (gameOver == true) {
 								return setTimeout(() => message.channel.send(bjEmbed), 500)
 							}
 						} else if (action === 'end' || action === 'e' || action === 'surrender' || action === 'exit') {
 							return message.lineReply(
-								flashEmbed.display('#FF0000', `${message.author.username},`, `You ended the game!`)
+								flashEmbed.display('orange', `${message.author.username},`, `You ended the game!`)
 							)
 						} else {
 							return message.lineReply(
-								flashEmbed.display('#FF0000', `${message.author.username},`, `Please enter a valid response!`)
+								flashEmbed.display('red', `${message.author.username},`, `Please enter a valid response!`)
 							)
 						}
 
 					}).catch(() => {
 						return message.lineReply(
-							flashEmbed.display('#FF0000', `${message.author.username},`, `You didn't answer in time!`)
+							flashEmbed.display('red', `${message.author.username},`, `You didn't answer in time!`)
 						)
 					})
 				})
@@ -264,7 +300,10 @@ module.exports = {
 			newGame();
 			calcTotal();
 			displayUI();
-			collectInput();
+			if (!gameOver) {
+				collectInput();
+			}
+
 
 
 		} catch (e) {

@@ -79,7 +79,7 @@ module.exports = {
 
           let counter = 0
           const questions = [
-            `It appears you have a Gun in your inventory. Would you like to use it to rob ${taggedUser}? \nType \`yes\` or \`no\``
+            `It appears you have a ${client.emojis.cache.get("835973355625906218")} __Gun__ in your inventory. Would you like to use it to rob ${taggedUser}? \nType \`yes\` or \`no\``
           ];
           const filter = m => m.author.id === message.author.id
           const collector = new Discord.MessageCollector(message.channel, filter, {
@@ -98,7 +98,7 @@ module.exports = {
           collector.on('end', mCollected => {
             if (mCollected.size < questions.length) {
               return message.lineReply (
-                flashEmbed.display('#FF0000', `${message.author.username},`, `You did not answer in time!`)
+                flashEmbed.display('#FF0000', `${message.author.username},`, `You hesitated and put your gun away!`)
               )
             }
 

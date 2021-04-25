@@ -47,7 +47,7 @@ module.exports = {
         }, { $inc: { rupees: -product.itemPrice} });
 
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Successfully purchased __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
+          flashEmbed.display('green', `${message.author.username},`, `Successfully purchased ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
