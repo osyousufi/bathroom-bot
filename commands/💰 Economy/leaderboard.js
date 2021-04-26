@@ -37,7 +37,7 @@ module.exports = {
       for (let index = 0; index < usersArr.length; index++) {
         await lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].netWorth}\` rupees`);
       }
-
+      console.log(usersArr)
       await message.channel.send(lbEmbed)
 
 

@@ -16,10 +16,8 @@ module.exports = {
 		try {
 			const bjEmbed = new Discord.MessageEmbed()
       .setTitle(`${message.author.username}'s blackjack game:`)
-			.setDescription(`Your moves: \`hit\`, \`stand\` or \`exit\` \nBet: \`${amount === 'all' ? profileData.wallet : amount}\` `)
+			.setDescription(`Your moves: \`hit\`, \`stand\`, \`double down\` or \`exit\` \nBet: \`${amount === 'all' ? profileData.wallet : amount}\` `)
 			.setFooter(`K, Q, J = 10 | A = 1 or 11`);
-
-
 
 			if(amount.toLowerCase() === 'all') {
 
@@ -30,10 +28,6 @@ module.exports = {
         }
 				amount = profileData.wallet
 
-				await profileModel.findOneAndUpdate({
-	        userID: message.author.id
-	      }, { $inc: {wallet: -amount} })
-
 			} else if (amount % 1 !== 0 || amount < 10) {
 	      return message.lineReply(
 	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be at least 10 rupees! \nThe proper usage would be: \`${prefix}blackjack <amount>\``)
@@ -42,12 +36,7 @@ module.exports = {
 	      return message.lineReply(
 	        flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
 	      )
-	    } else {
-				await profileModel.findOneAndUpdate({
-	        userID: message.author.id
-	      }, { $inc: {wallet: -amount} })
-			}
-
+	    }
 
 			let deck = [];
 			let playerCards = [];
@@ -55,6 +44,8 @@ module.exports = {
 			let playerValue = 0;
 			let houseValue = 0;
 			let gameOver = false;
+			let doubleDown = false;
+			let doubleDownOption = true;
 
 
 			const newGame = async () => {
@@ -183,6 +174,7 @@ module.exports = {
 	  	}
 
 			const displayUI = () => {
+
 				let playerUI = playerCards.map(card => {
 					return `[\`${card.cardSuit + card.cardValue}\`](https://www.google.com/)`
 				}).join(' ')
@@ -197,12 +189,19 @@ module.exports = {
 
 			const checkWin = async () => {
 				bjEmbed.setFooter(` `);
+				if (!doubleDownOption) {
+					bjEmbed.setDescription(`Your moves: \`hit\`, \`stand\`, or \`exit\` \nBet: \`${amount === 'all' ? profileData.wallet : amount}\` `)
+				}
+				if (doubleDown) {
+					amount = amount * 2
+				}
+
 		    if (playerValue > 21) {
 					gameOver = true;
 
 					await profileModel.findOneAndUpdate({
 	        	userID: message.author.id
-	      	}, { $inc: {"bjStats.losses": +1} })
+	      	}, { $inc: {wallet: -amount, "bjStats.losses": +1} })
 
 		      await bjEmbed.setDescription('Player bust, you lose!').setColor('#FF0000');
 					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.wallet - parseInt(amount)}\` rupees left in your wallet**`);
@@ -212,7 +211,7 @@ module.exports = {
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {wallet: amount * 2, "bjStats.wins": +1} })
+		      }, { $inc: {wallet: amount, "bjStats.wins": +1} })
 
 		     	await bjEmbed.setDescription('House bust, you win!').setColor('#00FF00');
 				 	await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount)}\` rupees left in your wallet**`);
@@ -223,7 +222,7 @@ module.exports = {
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {wallet: amount * 2, "bjStats.wins": +1} })
+		      }, { $inc: {wallet: amount, "bjStats.wins": +1} })
 
 		      await bjEmbed.setDescription('You win!').setColor('#00FF00');
 					await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount)}\` rupees left in your wallet**`);
@@ -234,7 +233,7 @@ module.exports = {
 
 					await profileModel.findOneAndUpdate({
 	        	userID: message.author.id
-	      	}, { $inc: {"bjStats.losses": +1} })
+	      	}, { $inc: {wallet: -amount, "bjStats.losses": +1} })
 
 		      await bjEmbed.setDescription('You lose!').setColor('#FF0000');
 					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.wallet - parseInt(amount)}\` rupees left in your wallet**`);
@@ -242,10 +241,6 @@ module.exports = {
 
 		    } else if (playerValue === houseValue && houseCards.length > 1) {
 					gameOver = true;
-
-					await profileModel.findOneAndUpdate({
-		        userID: message.author.id
-		      }, { $inc: {wallet: amount} })
 
 		      await bjEmbed.setDescription('Push!').setColor('#FFFF00');
 					await message.lineReply(`**You got back your \`${amount}\` rupees! \nYou have: \`${profileData.wallet}\` rupees left in your wallet**`);
@@ -260,18 +255,19 @@ module.exports = {
 					message.channel.awaitMessages(m => m.author.id == message.author.id, {
 						max: 1,
 						time: 1000 * 15
-					}).then(collected  => {
+					}).then(async collected => {
 						const action = collected.first().content.toLowerCase();
 
-						if (action === 'hit' || action === 'h') {
+						if (action.includes('hit') || action.startsWith('h')) {
 							hit();
+							doubleDownOption = false;
 							displayUI();
 							checkWin();
 							if (gameOver == true) {
 								return setTimeout(() => message.channel.send(bjEmbed), 500)
 							}
 							return collectInput()
-						} else if (action === 'stand' || action === 's') {
+						} else if (action.includes('stand') || action.startsWith('s')) {
 							stand();
 							displayUI();
 							checkWin();
@@ -279,17 +275,43 @@ module.exports = {
 							if (gameOver == true) {
 								return setTimeout(() => message.channel.send(bjEmbed), 500)
 							}
-						} else if (action === 'end' || action === 'e' || action === 'surrender' || action === 'exit') {
+						} else if (action.includes('exit') || action.startsWith('e')) {
+
+							await profileModel.findOneAndUpdate({
+				        userID: message.author.id
+				      }, { $inc: {wallet: -amount} })
+
 							return message.lineReply(
 								flashEmbed.display('orange', `${message.author.username},`, `You ended the game!`)
 							)
+						} else if (doubleDownOption && (action.includes('double down') || action.startsWith('dd'))) {
+							doubleDown = true;
+							hit();
+							displayUI();
+							stand();
+							displayUI();
+							checkWin();
+							if (gameOver == true) {
+								return setTimeout(() => message.channel.send(bjEmbed), 500)
+							}
+
+
 						} else {
+
+							await profileModel.findOneAndUpdate({
+				        userID: message.author.id
+				      }, { $inc: {wallet: -amount} })
+
 							return message.lineReply(
 								flashEmbed.display('red', `${message.author.username},`, `Please enter a valid response!`)
 							)
 						}
 
-					}).catch(() => {
+					}).catch(async () => {
+
+						await profileModel.findOneAndUpdate({
+			        userID: message.author.id
+			      }, { $inc: {wallet: -amount} })
 						return message.lineReply(
 							flashEmbed.display('red', `${message.author.username},`, `You didn't answer in time!`)
 						)

@@ -25,7 +25,7 @@ module.exports = {
 
       try {
         await message.lineReply(
-          flashEmbed.display('green', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.rupees}\`** rupees \n\nBank: **\`${taggedProfileData.bank}\`** rupees`)
+          flashEmbed.display('green', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.wallet}\`** rupees \n\nBank: **\`${taggedProfileData.bank}\`** rupees`)
         );
       } catch (err) {
           await message.lineReply(
