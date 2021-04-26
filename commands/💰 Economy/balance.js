@@ -38,7 +38,7 @@ module.exports = {
 
       try {
         await message.channel.send(
-          flashEmbed.display('green', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.rupees}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
+          flashEmbed.display('green', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.wallet}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
         );
       } catch (err) {
         await message.lineReply(

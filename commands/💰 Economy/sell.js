@@ -34,7 +34,7 @@ module.exports = {
 
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: { rupees: product.itemPrice} });
+        }, { $inc: { wallet: product.itemPrice} });
 
         return message.lineReply(
           flashEmbed.display('green', `${message.author.username},`, `Successfully sold ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)

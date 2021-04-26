@@ -9,44 +9,41 @@ module.exports = {
   description: "Display leaderboard for the guild.",
   async execute(message, args, profileData, client) {
 
-    setTimeout(async () => {
+    let usersArr = [];
+    try {
+      await profileModel.find({}, (err, users) => {
+         if (err) {
+           console.log(err)
+         } else {
+           users.forEach(async (user) => {
+             const userName = await client.users.fetch(user.userID);
+             const netWorth = await (user.wallet + user.bank);
+             let userObj = {
+               userName: userName.username,
+               netWorth: netWorth
+             }
 
-      try {
-        let usersArr = [];
-        await profileModel.find({}, (err, users) => {
-           if (err) {
-             console.log(err)
-           } else {
-             users.forEach(async (user) => {
-               const userName = await client.users.fetch(user.userID);
-               const netWorth = await (user.rupees + user.bank);
-               let userObj = {
-                 userName: userName.username,
-                 netWorth: netWorth
-               }
+             await usersArr.push(userObj);
+           })
+         }
 
-               await usersArr.push(userObj);
-             })
-           }
+      });
 
-        });
+      await usersArr.sort((a, b) => b.netWorth - a.netWorth);
+      usersArr = await usersArr.slice(0, 10);
 
-        await usersArr.sort((a, b) => b.netWorth - a.netWorth);
-        usersArr = await usersArr.slice(0, 10);
+      const lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('#00FF00');
 
-        const lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('#00FF00');
-
-        for (let index = 0; index < usersArr.length; index++) {
-          await lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].netWorth}\` rupees`);
-        }
-
-        await message.channel.send(lbEmbed)
-
-
-      } catch (e) {
-        console.log(err)
+      for (let index = 0; index < usersArr.length; index++) {
+        await lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].netWorth}\` rupees`);
       }
-    }, 2500)
+
+      await message.channel.send(lbEmbed)
+
+
+    } catch (e) {
+      console.log(err)
+    }
 
   }
 }

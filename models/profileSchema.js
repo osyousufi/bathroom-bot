@@ -6,7 +6,7 @@ const profileSchema = new mongoose.Schema({
     require: true,
     unique: true
   },
-  rupees: {
+  wallet: {
     type: Number,
     default: 1000
   },

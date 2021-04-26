@@ -23,7 +23,7 @@ module.exports = {
         return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number! \nThe proper usage would be: \`${prefix}<@username> <amount>\``)
         )
-      } else if (amount > profileData.rupees) {
+      } else if (amount > profileData.wallet) {
         return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
         )
@@ -74,11 +74,11 @@ module.exports = {
 
             await profileModel.findOneAndUpdate({
                 userID: message.author.id
-              }, { $inc: { rupees: -amount }});
+              }, { $inc: { wallet: -amount }});
 
             await profileModel.findOneAndUpdate({
                 userID: taggedUser.id
-              }, { $inc: { rupees: +amount }});
+              }, { $inc: { wallet: +amount }});
 
             return message.channel.send(
               flashEmbed.display('#00FF00', `${message.author.username},`, `Paid ${taggedUser.username} **\`${Number(amount).toString()}\`** rupees from your wallet!`)

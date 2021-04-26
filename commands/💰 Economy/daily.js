@@ -12,10 +12,10 @@ module.exports = {
 
     const response = await profileModel.findOneAndUpdate({
       userID: message.author.id
-    }, { $inc: {rupees: dailyValue} });
+    }, { $inc: {wallet: dailyValue} });
 
     await message.lineReply(
-      flashEmbed.display('green',`${message.author.username},`, `you received your daily stimulus of **\`${dailyValue}\`** rupees!`)
+      flashEmbed.display('green',`${message.author.username},`, `You received your daily stimulus of **\`${dailyValue}\`** rupees!`)
     );
 
   }

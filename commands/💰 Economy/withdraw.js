@@ -20,7 +20,7 @@ module.exports = {
         }
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: { rupees: +profileData.bank, bank: -profileData.bank }});
+        }, { $inc: { wallet: +profileData.bank, bank: -profileData.bank }});
 
         return message.channel.send(
           flashEmbed.display('#00FF00', `${message.author.username},`, `Withdrew **\`${Number(profileData.bank).toString()}\`** rupees from your bank!`)
@@ -39,7 +39,7 @@ module.exports = {
 
       await profileModel.findOneAndUpdate({
         userID: message.author.id
-      }, { $inc: { rupees: +amount, bank: -amount }});
+      }, { $inc: { wallet: +amount, bank: -amount }});
 
 
       return message.lineReply(

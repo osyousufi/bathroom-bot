@@ -14,13 +14,15 @@ module.exports = {
       let profileData;
       try {
         profileData = await profileModel.findOne({ userID: message.author.id });
-        
+
+        // profileModel.updateMany({}, {$rename: {"rupees": "wallet"}}, (err, items) => {})
         if(!profileData) {
           profileHandler.set(profileModel, message.author);
         }
       } catch (err) {
          console.log(err);
       }
+
 
       if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -78,7 +80,7 @@ module.exports = {
               unitCount: 2,
             });
         		return message.lineReply(
-              flashEmbed.display('red', `${message.author.username},`, `please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
+              flashEmbed.display('red', `${message.author.username},`, `Please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
             );
         	}
         }

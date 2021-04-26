@@ -10,7 +10,7 @@ module.exports = {
   usage: '<@username>',
   aliases: ['steal'],
   description: "Rob a user. Having a gun increases the chance!",
-  cooldown: 300,
+  cooldown: 1,
   async execute(message, args, profileData, client, prefix) {
 
     const taggedUser = message.mentions.users.first();
@@ -27,25 +27,34 @@ module.exports = {
 
         if (taggedProfileData.rupees <= 0) {
           return message.lineReply(
-            flashEmbed.display('red', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou run away and get rid of any evidence!`)
+            flashEmbed.display('red', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
           )
         }
 
         await profileModel.findOneAndUpdate({
                 userID: message.author.id
-        }, { $inc: { rupees: +taggedProfileData.rupees }});
+        }, { $inc: { wallet: +taggedProfileData.rupees }});
 
         await profileModel.findOneAndUpdate({
           userID: taggedUser.id
-        }, { $inc: { rupees: -taggedProfileData.rupees }});
+        }, { $inc: { wallet: -taggedProfileData.rupees }});
 
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.rupees}\` rupees \nYou run away and get rid of any evidence!`)
+          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.rupees}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
         )
       } else {
 
-        const fineAmmount = 1000;
-        if (profileData.rupees < fineAmmount) {
+        const percent = chance.floating({min: 0.10, max: 0.30, fixed: 2});
+        let fineAmmount;
+        if (profileData.wallet <= 0 && profileData.bank <= 0) {
+          fineAmmount = 1000;
+        } else if(profileData.wallet <= 1000) {
+          fineAmmount = Math.round(profileData.bank * percent)
+        } else {
+          fineAmmount = Math.round(profileData.wallet * percent)
+        }
+
+        if (profileData.wallet < fineAmmount) {
 
           await profileModel.findOneAndUpdate({
             userID: message.author.id
@@ -54,11 +63,11 @@ module.exports = {
         } else {
           await profileModel.findOneAndUpdate({
             userID: message.author.id
-          }, { $inc: { rupees: -fineAmmount }});
+          }, { $inc: { wallet: -fineAmmount }});
         }
 
         return message.lineReply(
-          flashEmbed.display('red', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou get searched and removed of anything used in the robbery!`)
+          flashEmbed.display('red', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
         )
       }
     }

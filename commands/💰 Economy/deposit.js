@@ -13,17 +13,17 @@ module.exports = {
 
     try {
       if (amount == 'all') {
-        if (profileData.rupees <= 0) {
+        if (profileData.wallet <= 0) {
           return message.lineReplyNoMention(
             flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
           )
         }
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: { rupees: -profileData.rupees, bank: +profileData.rupees }});
+        }, { $inc: { wallet: -profileData.wallet, bank: +profileData.wallet }});
 
         return message.channel.send(
-          flashEmbed.display('#00FF00', `${message.author.username},`, `Desposited **\`${Number(profileData.rupees).toString()}\`** rupees from your wallet!`)
+          flashEmbed.display('#00FF00', `${message.author.username},`, `Desposited **\`${Number(profileData.wallet).toString()}\`** rupees from your wallet!`)
         )
       }
 
@@ -31,7 +31,7 @@ module.exports = {
         return message.lineReplyNoMention(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number!`)
         )
-      } else if (amount > profileData.rupees) {
+      } else if (amount > profileData.wallet) {
         return message.lineReplyNoMention(
           flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAoo!`)
         )
@@ -39,7 +39,7 @@ module.exports = {
 
       await profileModel.findOneAndUpdate({
         userID: message.author.id
-      }, { $inc: { rupees: -amount, bank: amount }}
+      }, { $inc: { wallet: -amount, bank: amount }}
     )
 
       return message.lineReplyNoMention(

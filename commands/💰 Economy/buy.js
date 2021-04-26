@@ -19,7 +19,7 @@ module.exports = {
 
     for (let product of storeItems.list) {
       if (Object.values(product).includes(item)) {
-        if (profileData.rupees < product.itemPrice) {
+        if (profileData.wallet < product.itemPrice) {
           return message.lineReply(
             flashEmbed.display('red', `${message.author.username},`, `You do not have enough money to buy this item!`)
           );
@@ -44,7 +44,7 @@ module.exports = {
 
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: { rupees: -product.itemPrice} });
+        }, { $inc: { wallet: -product.itemPrice} });
 
         return message.lineReply(
           flashEmbed.display('green', `${message.author.username},`, `Successfully purchased ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)

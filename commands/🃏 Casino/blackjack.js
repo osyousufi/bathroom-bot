@@ -16,36 +16,36 @@ module.exports = {
 		try {
 			const bjEmbed = new Discord.MessageEmbed()
       .setTitle(`${message.author.username}'s blackjack game:`)
-			.setDescription(`Your moves: \`hit\`, \`stand\` or \`exit\` \nBet: \`${amount === 'all' ? profileData.rupees : amount}\` `)
+			.setDescription(`Your moves: \`hit\`, \`stand\` or \`exit\` \nBet: \`${amount === 'all' ? profileData.wallet : amount}\` `)
 			.setFooter(`K, Q, J = 10 | A = 1 or 11`);
 
 
 
 			if(amount.toLowerCase() === 'all') {
 
-				if (profileData.rupees <= 0) {
+				if (profileData.wallet <= 0) {
           return message.lineReply(
             flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
           )
         }
-				amount = profileData.rupees
+				amount = profileData.wallet
 
 				await profileModel.findOneAndUpdate({
 	        userID: message.author.id
-	      }, { $inc: {rupees: -amount} })
+	      }, { $inc: {wallet: -amount} })
 
 			} else if (amount % 1 !== 0 || amount < 10) {
 	      return message.lineReply(
-	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be at least 10! \nThe proper usage would be: \`${prefix}blackjack <amount>\``)
+	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be at least 10 rupees! \nThe proper usage would be: \`${prefix}blackjack <amount>\``)
 	      )
-	    } else if (amount > profileData.rupees) {
+	    } else if (amount > profileData.wallet) {
 	      return message.lineReply(
 	        flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
 	      )
 	    } else {
 				await profileModel.findOneAndUpdate({
 	        userID: message.author.id
-	      }, { $inc: {rupees: -amount} })
+	      }, { $inc: {wallet: -amount} })
 			}
 
 
@@ -93,10 +93,10 @@ module.exports = {
 
 						await profileModel.findOneAndUpdate({
 			        userID: message.author.id
-			      }, { $inc: {rupees: (amount * 2.5), "bjStats.wins": +1} })
+			      }, { $inc: {wallet: (amount * 2.5), "bjStats.wins": +1} })
 
 			      await bjEmbed.setDescription('**BLACKJACK!** You win!').setColor('#800080');
-						await message.lineReply(`**You won \`${amount * 1.5}\` rupees! \nYou have: \`${profileData.rupees + parseInt(amount * 1.5)}\` rupees left in your wallet**`);
+						await message.lineReply(`**You won \`${amount * 1.5}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount * 1.5)}\` rupees left in your wallet**`);
 						await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 						return await message.channel.send(bjEmbed)
@@ -205,17 +205,17 @@ module.exports = {
 	      	}, { $inc: {"bjStats.losses": +1} })
 
 		      await bjEmbed.setDescription('Player bust, you lose!').setColor('#FF0000');
-					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.rupees - parseInt(amount)}\` rupees left in your wallet**`);
+					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.wallet - parseInt(amount)}\` rupees left in your wallet**`);
 					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins')} || Losses: ${profileData.get('bjStats.losses') + 1}`);
 		    } else if (houseValue > 21) {
 					gameOver = true;
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {rupees: amount * 2, "bjStats.wins": +1} })
+		      }, { $inc: {wallet: amount * 2, "bjStats.wins": +1} })
 
 		     	await bjEmbed.setDescription('House bust, you win!').setColor('#00FF00');
-				 	await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.rupees + parseInt(amount)}\` rupees left in your wallet**`);
+				 	await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount)}\` rupees left in your wallet**`);
 					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 		    } else if (playerValue > houseValue && houseCards.length > 1) {
@@ -223,10 +223,10 @@ module.exports = {
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {rupees: amount * 2, "bjStats.wins": +1} })
+		      }, { $inc: {wallet: amount * 2, "bjStats.wins": +1} })
 
 		      await bjEmbed.setDescription('You win!').setColor('#00FF00');
-					await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.rupees + parseInt(amount)}\` rupees left in your wallet**`);
+					await message.lineReply(`**You won \`${amount}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount)}\` rupees left in your wallet**`);
 					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 		    } else if (houseValue > playerValue && houseCards.length > 1) {
@@ -237,7 +237,7 @@ module.exports = {
 	      	}, { $inc: {"bjStats.losses": +1} })
 
 		      await bjEmbed.setDescription('You lose!').setColor('#FF0000');
-					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.rupees - parseInt(amount)}\` rupees left in your wallet**`);
+					await message.lineReply(`**You lost \`${amount}\` rupees! \nYou have: \`${profileData.wallet - parseInt(amount)}\` rupees left in your wallet**`);
 					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins')} || Losses: ${profileData.get('bjStats.losses') + 1}`);
 
 		    } else if (playerValue === houseValue && houseCards.length > 1) {
@@ -245,10 +245,10 @@ module.exports = {
 
 					await profileModel.findOneAndUpdate({
 		        userID: message.author.id
-		      }, { $inc: {rupees: amount} })
+		      }, { $inc: {wallet: amount} })
 
 		      await bjEmbed.setDescription('Push!').setColor('#FFFF00');
-					await message.lineReply(`**You got back your \`${amount}\` rupees! \nYou have: \`${profileData.rupees}\` rupees left in your wallet**`);
+					await message.lineReply(`**You got back your \`${amount}\` rupees! \nYou have: \`${profileData.wallet}\` rupees left in your wallet**`);
 					await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins')} || Losses: ${profileData.get('bjStats.losses')}`);
 		    }
 

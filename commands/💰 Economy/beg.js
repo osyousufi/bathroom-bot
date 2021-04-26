@@ -14,7 +14,7 @@ module.exports = {
       const donation = chance.integer({min: 1, max: 128});
       const response = await profileModel.findOneAndUpdate({
         userID: message.author.id
-      }, { $inc: {rupees: donation} });
+      }, { $inc: {wallet: donation} });
 
       if (donation > 50) {
         await message.lineReply(
