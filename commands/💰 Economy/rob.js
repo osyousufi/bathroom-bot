@@ -16,6 +16,15 @@ module.exports = {
     const taggedUser = message.mentions.users.first();
     let successful;
 
+    const percent = chance.floating({min: 0.10, max: 0.30, fixed: 2});
+    let fineAmmount;
+    if (profileData.wallet <= 0 && profileData.bank <= 0) {
+      fineAmmount = 1000;
+    } else if(profileData.wallet <= 1000) {
+      fineAmmount = Math.round(profileData.bank * percent)
+    } else {
+      fineAmmount = Math.round(profileData.wallet * percent)
+    }
 
     const robUser = async (successful, taggedUser) => {
       if(successful) {
@@ -25,7 +34,7 @@ module.exports = {
           profileHandler.set(profileModel, taggedUser)
         }
 
-        if (taggedProfileData.rupees <= 0) {
+        if (taggedProfileData.wallet <= 0) {
           return message.lineReply(
             flashEmbed.display('red', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
           )
@@ -33,26 +42,16 @@ module.exports = {
 
         await profileModel.findOneAndUpdate({
                 userID: message.author.id
-        }, { $inc: { wallet: +taggedProfileData.rupees }});
+        }, { $inc: { wallet: +taggedProfileData.wallet }});
 
         await profileModel.findOneAndUpdate({
           userID: taggedUser.id
-        }, { $inc: { wallet: -taggedProfileData.rupees }});
+        }, { $inc: { wallet: -taggedProfileData.wallet }});
 
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.rupees}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
+          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.wallet}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
         )
       } else {
-
-        const percent = chance.floating({min: 0.10, max: 0.30, fixed: 2});
-        let fineAmmount;
-        if (profileData.wallet <= 0 && profileData.bank <= 0) {
-          fineAmmount = 1000;
-        } else if(profileData.wallet <= 1000) {
-          fineAmmount = Math.round(profileData.bank * percent)
-        } else {
-          fineAmmount = Math.round(profileData.wallet * percent)
-        }
 
         if (profileData.wallet < fineAmmount) {
 
