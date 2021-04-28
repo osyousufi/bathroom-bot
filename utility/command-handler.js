@@ -36,28 +36,28 @@ module.exports = {
         if (command.guildOnly && message.channel.type === 'dm') {
 
           return message.lineReply(
-            flashEmbed.display('red', `${message.author.username},`, 'I can\'t execute that command inside DMs!')
+            flashEmbed.display('RED', `${message.author.username},`, 'I can\'t execute that command inside DMs!')
           );
 
         }
         else if (command.args && !args.length) {
-          let reply = flashEmbed.display('red', `${message.author.username},`, `You didn't provide any arguments!`);
+          let reply = flashEmbed.display('RED', `${message.author.username},`, `You didn't provide any arguments!`);
           if (command.usage) {
-            reply = flashEmbed.display('red', `${message.author.username},`, `You didn't provide any arguments! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``);
+            reply = flashEmbed.display('RED', `${message.author.username},`, `You didn't provide any arguments! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``);
           }
           return message.lineReply(reply);
         }
         else if (command.mention && !message.mentions.users.first()){
-          let reply = flashEmbed.display('red', `${message.author.username},`, `You didn't mention a user!`)
+          let reply = flashEmbed.display('RED', `${message.author.username},`, `You didn't mention a user!`)
           if (command.usage) {
-            reply = flashEmbed.display('red', `${message.author.username},`, `You didn't mention a user! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``)
+            reply = flashEmbed.display('RED', `${message.author.username},`, `You didn't mention a user! \nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``)
           }
           return message.lineReply(reply);
 
         } else if (command.perms && !message.member.hasPermission(command.perms)) {
 
           return message.lineReply(
-            flashEmbed.display('red', `${message.author.username},`, `You dont have perms for this!`)
+            flashEmbed.display('RED', `${message.author.username},`, `You dont have perms for this!`)
           );
         }
 
@@ -80,7 +80,7 @@ module.exports = {
               unitCount: 2,
             });
         		return message.lineReply(
-              flashEmbed.display('red', `${message.author.username},`, `Please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
+              flashEmbed.display('RED', `${message.author.username},`, `Please wait \`${formattedTime}\` before reusing the \`${command.name}\` command.`)
             );
         	}
         }

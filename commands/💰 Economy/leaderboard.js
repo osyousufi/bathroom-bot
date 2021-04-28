@@ -31,7 +31,7 @@ module.exports = {
 
       if (usersArr.length == 0) {
         return message.lineReply(
-          flashEmbed.display('red', `${message.author.username},`, `Error. Please wait a bit before using this command.`)
+          flashEmbed.display('RED', `${message.author.username},`, `Error. Please wait a bit before using this command.`)
         )
       }
       usersArr.sort((a, b) => b.value - a.value);

@@ -15,7 +15,7 @@ module.exports = {
     }, { $inc: {wallet: dailyValue} });
 
     await message.lineReply(
-      flashEmbed.display('green',`${message.author.username},`, `You received your daily stimulus of **\`${dailyValue}\`** rupees!`)
+      flashEmbed.display('GREEN',`${message.author.username},`, `You received your daily stimulus of **\`${dailyValue}\`** rupees!`)
     );
 
   }

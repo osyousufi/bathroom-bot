@@ -11,24 +11,24 @@ module.exports = {
     const successful = chance.bool({ likelihood: 73 });
 
     if (successful) {
-      const donation = chance.integer({min: 1, max: 128});
+      const donation = chance.integer({min: 1, max: 100});
       const response = await profileModel.findOneAndUpdate({
         userID: message.author.id
       }, { $inc: {wallet: donation} });
 
       if (donation > 50) {
         await message.lineReply(
-          flashEmbed.display('green',`${message.author.username},`, `You begged and recieved **\`${donation}\`** rupees! \nKeep this up and you might become a millionaire!`)
+          flashEmbed.display('GREEN',`${message.author.username},`, `You begged and recieved **\`${donation}\`** rupees! \nKeep this up and you might become a millionaire!`)
         );
       } else {
         await message.lineReply(
-          flashEmbed.display('green',`${message.author.username},`, `You begged and recieved **\`${donation}\`** rupees!`)
+          flashEmbed.display('GREEN',`${message.author.username},`, `You begged and recieved **\`${donation}\`** rupees!`)
         );
       }
 
     } else {
       await message.lineReply(
-        flashEmbed.display('red',`${message.author.username},`, `You tried begging for some meager rupees, but you ended up getting curbstomped by a rich guy in a suit!`)
+        flashEmbed.display('RED',`${message.author.username},`, `You tried begging for some meager rupees, but you ended up getting curbstomped by a rich guy in a suit!`)
       );
     }
 

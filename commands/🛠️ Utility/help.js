@@ -17,6 +17,7 @@ module.exports = {
 		const helpEmbed = new Discord.MessageEmbed()
 			.setAuthor('Bathroom Bot', `${client.user.displayAvatarURL()}`)
 			.setFooter('© osyou#2095', `${imageUrl}`)
+			.setTimestamp()
 
     if (!args.length) {
 
@@ -41,7 +42,7 @@ module.exports = {
 
 	    if (!command) {
 				message.lineReply(
-					flashEmbed.display('red',`${message.author.username},`, `That's not a valid command!`)
+					flashEmbed.display('RED',`${message.author.username},`, `That's not a valid command!`)
 				)
 	    }
 

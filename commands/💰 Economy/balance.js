@@ -25,11 +25,11 @@ module.exports = {
 
       try {
         await message.lineReply(
-          flashEmbed.display('green', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.wallet}\`** rupees \n\nBank: **\`${taggedProfileData.bank}\`** rupees`)
+          flashEmbed.display('GREEN', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.wallet}\`** rupees \n\nBank: **\`${taggedProfileData.bank}\`** rupees`)
         );
       } catch (err) {
           await message.lineReply(
-            flashEmbed.display('yellow', `${message.author.username},`, `Balance has been configured, use this command again.`)
+            flashEmbed.display('YELLOW', `${message.author.username},`, `Balance has been configured, use this command again.`)
           );
       }
 
@@ -38,11 +38,11 @@ module.exports = {
 
       try {
         await message.channel.send(
-          flashEmbed.display('green', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.wallet}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
+          flashEmbed.display('GREEN', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.wallet}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
         );
       } catch (err) {
         await message.lineReply(
-          flashEmbed.display('yellow', `${message.author.username},`, `Balance has been configured, use this command again.`)
+          flashEmbed.display('YELLOW', `${message.author.username},`, `Balance has been configured, use this command again.`)
         );
       }
 

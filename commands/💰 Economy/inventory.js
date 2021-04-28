@@ -19,7 +19,7 @@ module.exports = {
 
         if (!res.inventory.length) {
           return message.channel.send(
-            flashEmbed.display('green',`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`, `Nothing here 😢`)
+            flashEmbed.display('GREEN',`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`, `Nothing here 😢`)
           )
         } else {
           invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)

@@ -23,19 +23,19 @@ module.exports = {
         await profileData.inventory.splice(idx, 1);
         await profileData.save();
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `You ate a cookie. Yummy!`)
+          flashEmbed.display('GREEN', `${message.author.username},`, `You ate a cookie. Yummy!`)
         )
       }
 
       if (item == 'Gun') {
         return message.lineReply(
-          flashEmbed.display(null, `${message.author.username},`, `You pull out your gun and stare at it for a bit. \nMaybe you could use this for **rob**bing someone...`)
+          flashEmbed.display('BLACK', `${message.author.username},`, `You pull out your gun and stare at it for a bit. \nMaybe you could use this for **rob**bing someone...`)
         )
       }
 
     } else {
       return message.lineReply(
-        flashEmbed.display('red', `${message.author.username},`, `Item not found!`)
+        flashEmbed.display('RED', `${message.author.username},`, `Item not found!`)
       );
     }
 

@@ -36,9 +36,14 @@ module.exports = {
 
         if (taggedProfileData.wallet <= 0) {
           return message.lineReply(
-            flashEmbed.display('red', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
+            flashEmbed.display('RED', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
           )
         }
+
+
+        message.lineReply(
+          flashEmbed.display('GREEN', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.wallet}\` rupees \nYou have: \`${profileData.wallet + taggedProfileData.wallet}\` rupees left in your wallet`)
+        )
 
         await profileModel.findOneAndUpdate({
                 userID: message.author.id
@@ -48,9 +53,6 @@ module.exports = {
           userID: taggedUser.id
         }, { $inc: { wallet: -taggedProfileData.wallet }});
 
-        return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Your robbery attempt was a success and you stole \`${taggedProfileData.wallet}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
-        )
       } else {
 
         if (profileData.wallet < fineAmmount) {
@@ -66,7 +68,7 @@ module.exports = {
         }
 
         return message.lineReply(
-          flashEmbed.display('red', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
+          flashEmbed.display('RED', `${message.author.username},`, `Your robbery attempt was a failure and you ended up getting fined \`${fineAmmount}\` rupees \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
         )
       }
     }
@@ -123,14 +125,14 @@ module.exports = {
                 await profileData.save();
                 successful = chance.bool({ likelihood: 75 });
                 message.channel.send(
-                  flashEmbed.display('green', `${message.author.username},`, `You decided to use your gun. Attempting armed robbery...`)
+                  flashEmbed.display('GREEN', `${message.author.username},`, `You decided to use your gun. Attempting armed robbery...`)
                 )
                 robUser(successful, taggedUser)
 
               } else {
                 successful = chance.bool({ likelihood: 5 });
                 message.channel.send(
-                  flashEmbed.display('red', `${message.author.username},`, `You didn't use your gun. Attempting an unarmed robbery...`)
+                  flashEmbed.display('RED', `${message.author.username},`, `You didn't use your gun. Attempting an unarmed robbery...`)
                 )
                 robUser(successful, taggedUser)
               }

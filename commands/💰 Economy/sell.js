@@ -37,13 +37,13 @@ module.exports = {
         }, { $inc: { wallet: product.itemPrice} });
 
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Successfully sold ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
+          flashEmbed.display('GREEN', `${message.author.username},`, `Successfully sold ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
 
     return message.lineReply(
-      flashEmbed.display('red', `${message.author.username},`, `This item is not in your inventory!`)
+      flashEmbed.display('RED', `${message.author.username},`, `This item is not in your inventory!`)
     );
 
   }

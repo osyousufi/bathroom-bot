@@ -11,17 +11,17 @@ module.exports = {
       const successful = chance.bool();
       if (successful) {
         return message.lineReplyNoMention(
-          flashEmbed.display('green', 'Heads!', '')
+          flashEmbed.display('GREEN', 'Heads!', '')
         )
       } else {
         return message.lineReplyNoMention(
-          flashEmbed.display('green', 'Tails!', '')
+          flashEmbed.display('GREEN', 'Tails!', '')
         )
       }
     }
 
     message.channel.send(
-      flashEmbed.display(null, 'Flipping coin...', '')
+      flashEmbed.display('BLACK', 'Flipping coin...', '')
     )
     setTimeout(() => {
       flipCoin();

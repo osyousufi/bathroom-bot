@@ -21,11 +21,11 @@ module.exports = {
       if (Object.values(product).includes(item)) {
         if (profileData.wallet < product.itemPrice) {
           return message.lineReply(
-            flashEmbed.display('red', `${message.author.username},`, `You do not have enough money to buy this item!`)
+            flashEmbed.display('RED', `${message.author.username},`, `You do not have enough money to buy this item!`)
           );
         } else if (profileData.inventory.length >= 10) {
           return message.lineReply(
-            flashEmbed.display('red', `${message.author.username},`, `Your inventory is full!`)
+            flashEmbed.display('RED', `${message.author.username},`, `Your inventory is full!`)
           );
         }
 
@@ -47,14 +47,14 @@ module.exports = {
         }, { $inc: { wallet: -product.itemPrice} });
 
         return message.lineReply(
-          flashEmbed.display('green', `${message.author.username},`, `Successfully purchased ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
+          flashEmbed.display('GREEN', `${message.author.username},`, `Successfully purchased ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
         );
       }
     }
 
 
     return message.lineReply(
-      flashEmbed.display('red', `${message.author.username},`, `This item is not in the store!`)
+      flashEmbed.display('RED', `${message.author.username},`, `This item is not in the store!`)
     );
 
   }

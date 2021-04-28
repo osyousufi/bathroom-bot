@@ -254,7 +254,7 @@ module.exports = {
 				message.channel.send(bjEmbed).then(() => {
 					message.channel.awaitMessages(m => m.author.id == message.author.id, {
 						max: 1,
-						time: 1000 * 15
+						time: 1000 * 30
 					}).then(async collected => {
 						const action = collected.first().content.toLowerCase();
 
@@ -282,7 +282,7 @@ module.exports = {
 				      }, { $inc: {wallet: -amount} })
 
 							return message.lineReply(
-								flashEmbed.display('orange', `${message.author.username},`, `You ended the game!`)
+								flashEmbed.display('ORANGE', `${message.author.username},`, `You ended the game!`)
 							)
 						} else if (doubleDownOption && (action.includes('double down') || action.startsWith('dd'))) {
 							doubleDown = true;
@@ -303,7 +303,7 @@ module.exports = {
 				      }, { $inc: {wallet: -amount} })
 
 							return message.lineReply(
-								flashEmbed.display('red', `${message.author.username},`, `Please enter a valid response!`)
+								flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid response!`)
 							)
 						}
 
@@ -313,7 +313,7 @@ module.exports = {
 			        userID: message.author.id
 			      }, { $inc: {wallet: -amount} })
 						return message.lineReply(
-							flashEmbed.display('red', `${message.author.username},`, `You didn't answer in time!`)
+							flashEmbed.display('RED', `${message.author.username},`, `You didn't answer in time!`)
 						)
 					})
 				})
