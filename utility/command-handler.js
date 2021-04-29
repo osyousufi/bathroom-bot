@@ -15,7 +15,7 @@ module.exports = {
       try {
         profileData = await profileModel.findOne({ userID: message.author.id });
 
-        // profileModel.updateMany({}, {$rename: {"rupees": "wallet"}}, (err, items) => {})
+        // profileModel.updateMany({}, {rlStats: {wins: 0, losses: 0}}, (err, items) => {})
         if(!profileData) {
           profileHandler.set(profileModel, message.author);
         }

@@ -19,7 +19,11 @@ const profileSchema = new mongoose.Schema({
   bjStats: {
     type: Map,
     of: Number
-  }
+  },
+  rlStats: {
+    type: Map,
+    of: Number
+  },
 }, {strict: false});
 
 module.exports = mongoose.model('profiles', profileSchema);

@@ -6,6 +6,7 @@ module.exports = {
           bank: 0,
           inventory: [],
           bjStats: {wins: 0, losses: 0},
+          rlStats: {wins: 0, losses: 0},
         });
         profile.save();
   }
