@@ -24,20 +24,47 @@ module.exports = {
         } else {
           invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
 
-          let itemData = {}
 
+
+
+          // const getCount = (i) => {
+          //   count = 0;
+          //   for (let item of res.inventory) {
+          //     if(item.itemName == i.itemName) {
+          //       count+=1
+          //     }
+          //
+          //   }
+          //   return count;
+          // }
+
+          // const key = 'itemName';
+          //
+          //
+          //
+          // const arrayUniqueByKey = [...new Map(res.inventory.map(i =>[i[key], i])).values()];
+          //
+          //
+          // for (let i of res.inventory) {
+          //   console.log(i)
+          // }
           for (let item of res.inventory) {
 
-            if(Object.keys(itemData).indexOf(`${item.itemName}`) !== -1) {
-              itemData[`${item.itemName}`]['itemCount'] = itemData[`${item.itemName}`]['itemCount'] + 1
-              for (let i = 0; i < Object.keys(itemData).length; i++) {
-                invEmbed.fields[i] = {name: `${itemData[Object.keys(itemData)[i]].itemIcon} __${itemData[Object.keys(itemData)[i]].itemName}__ x ${itemData[Object.keys(itemData)[i]]['itemCount']}`, value: `Price: \`${itemData[Object.keys(itemData)[i]].itemPrice}\` rupees \nDescription: ${itemData[Object.keys(itemData)[i]].itemDescription}`}
-              }
 
-            } else {
-              itemData[`${item.itemName}`] = {itemCount: 1, itemName: item.itemName, itemIcon: item.itemIcon, itemPrice: item.itemPrice, itemDescription: item.itemDescription}
-              invEmbed.addField(`${item.itemIcon} __${item.itemName}__ x ${itemData[`${item.itemName}`]['itemCount']}`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
-            }
+            // let itemCount = res.inventory.filter((v) => {
+            //   return v ==
+            // })
+             invEmbed.addField(`${item.itemIcon} __${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
+            // if(Object.keys(itemData).indexOf(`${item.itemName}`) !== -1) {
+            //   itemData[`${item.itemName}`]['itemCount'] = itemData[`${item.itemName}`]['itemCount'] + 1
+            //   for (let i = 0; i < Object.keys(itemData).length; i++) {
+            //     invEmbed.fields[i] = {name: `${itemData[Object.keys(itemData)[i]].itemIcon} __${itemData[Object.keys(itemData)[i]].itemName}__ x ${itemData[Object.keys(itemData)[i]]['itemCount']}`, value: `Price: \`${itemData[Object.keys(itemData)[i]].itemPrice}\` rupees \nDescription: ${itemData[Object.keys(itemData)[i]].itemDescription}`}
+            //   }
+            //
+            // } else {
+            //   itemData[`${item.itemName}`] = {itemCount: 1, itemName: item.itemName, itemIcon: item.itemIcon, itemPrice: item.itemPrice, itemDescription: item.itemDescription}
+            //   invEmbed.addField(`${item.itemIcon} __${item.itemName}__ x ${itemData[`${item.itemName}`]['itemCount']}`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
+            // }
 
 
           }
