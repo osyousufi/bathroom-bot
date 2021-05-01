@@ -14,9 +14,7 @@ module.exports = {
     let amount = args[0];
     let space = args.slice(1).join(' ');
 
-    const getKeyByValue = (object, value) => {
-      return Object.keys(object).find(key => object[key] === value);
-    }
+
 
     const validSpaces =  [
       'red',
@@ -37,16 +35,16 @@ module.exports = {
       'black': [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35],
       'odd': [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35],
       'even': [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36],
-      '1-12': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       '1st': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      '13-24': [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      '1-12': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       '2nd': [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      '13-24': [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      '3rd': [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
       '25-36': [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
-      '3rd': [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
     }
 
     const result = chance.integer({min: 0, max: 36});
-    // const result = 10;
+    // const result = 1;
 
     const rlEmbed = new Discord.MessageEmbed()
       .setTitle(`${message.author.username}'s roulette game:`)
@@ -79,6 +77,10 @@ module.exports = {
       return message.lineReply(
         flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
       )
+    } else if (amount > 250000) {
+      return message.lineReply(
+        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be less than 250000 rupees!`)
+      )
     } else {
       amount = parseInt(amount)
     }
@@ -101,11 +103,15 @@ module.exports = {
     )
 
 
+    const checkValue = (objectSection) => {
+      return Object.values(spaceToNumbers[objectSection]).indexOf(result) !== -1
+    }
 
-    const resultKey = getKeyByValue(spaceToNumbers, result);
+
     let winnings = amount;
 
-    if (result == parseInt(space)) {
+
+    if (result == parseInt(/^{space}$/)) {
 
       winnings = amount + (amount * 35);
       gameWon = true;
@@ -115,23 +121,37 @@ module.exports = {
 
     } else if (Object.keys(spaceToNumbers).indexOf(space) !== -1) {
       if (spaceToNumbers[space].indexOf(result) !== -1) {
-        if (resultKey == 'red' || resultKey == 'black' || resultKey == 'even' || resultKey == 'odd') {
+        if (checkValue('red') || checkValue('black') || checkValue('even') || checkValue('odd')) {
           winnings = amount + (amount);
-        } else if (resultKey == '1st' || resultKey == '2nd' || resultKey == '3rd' || resultKey == '1-12' || resultKey == '13-24' || resultKey == '25-36'){
+
+          gameWon = true;
+
+          await profileModel.findOneAndUpdate({
+            userID: message.author.id
+          }, { $inc: {wallet: winnings, "rlStats.wins": +1} });
+
+        } else if (checkValue('1st') || checkValue('2nd') || checkValue('3rd') || checkValue('1-12') ||resultKey == checkValue('13-24') || checkValue('25-36')) {
+
           winnings = amount + (amount*2);
+
+          gameWon = true;
+
+          await profileModel.findOneAndUpdate({
+            userID: message.author.id
+          }, { $inc: {wallet: winnings, "rlStats.wins": +1} });
         }
-        gameWon = true;
+
+      } else {
+
+        gameWon = false;
 
         await profileModel.findOneAndUpdate({
           userID: message.author.id
-        }, { $inc: {wallet: winnings, "rlStats.wins": +1} });
-      }
-    } else {
-      gameWon = false;
+        }, { $inc: {wallet: -winnings, "rlStats.losses": +1} });
 
-      await profileModel.findOneAndUpdate({
-        userID: message.author.id
-      }, { $inc: {wallet: -amount, "rlStats.losses": +1} });
+
+      }
+
     }
 
     if (gameWon) {
@@ -139,7 +159,7 @@ module.exports = {
       rlEmbed.addField(`You ***won*** \`${winnings}\` rupees!`, `You have \`${profileData.wallet + winnings}\` rupees left in your wallet!`);
     } else {
       rlEmbed.setFooter(`Wins: ${profileData.get('rlStats.wins')} || Losses: ${profileData.get('rlStats.losses') + 1}`);
-      rlEmbed.addField(`You ***lost*** \`${amount}\` rupees!`, `You have \`${profileData.wallet - amount}\` rupees left in your wallet!`);
+      rlEmbed.addField(`You ***lost*** \`${winnings}\` rupees!`, `You have \`${profileData.wallet - winnings}\` rupees left in your wallet!`);
     }
 
     setTimeout(() => {

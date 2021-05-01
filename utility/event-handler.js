@@ -6,7 +6,10 @@ module.exports = {
   load(client) {
 
     client.on('guildMemberAdd', async (member) => {
-      profileHandler.set(profileModel, member);
+
+      let profileData = await profileModel.findOne({ userID: member.id });
+      if (!profileData) profileHandler.set(profileModel, member);
+
     });
 
     client.on('guildMemberRemove', (member) => {

@@ -23,9 +23,26 @@ module.exports = {
           )
         } else {
           invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
+
+          let itemData = {}
+
           for (let item of res.inventory) {
-            invEmbed.addField(`${item.itemIcon} __${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
+
+            if(Object.keys(itemData).indexOf(`${item.itemName}`) !== -1) {
+              itemData[`${item.itemName}`]['itemCount'] = itemData[`${item.itemName}`]['itemCount'] + 1
+              for (let i = 0; i < Object.keys(itemData).length; i++) {
+                invEmbed.fields[i] = {name: `${itemData[Object.keys(itemData)[i]].itemIcon} __${itemData[Object.keys(itemData)[i]].itemName}__ x ${itemData[Object.keys(itemData)[i]]['itemCount']}`, value: `Price: \`${itemData[Object.keys(itemData)[i]].itemPrice}\` rupees \nDescription: ${itemData[Object.keys(itemData)[i]].itemDescription}`}
+              }
+
+            } else {
+              itemData[`${item.itemName}`] = {itemCount: 1, itemName: item.itemName, itemIcon: item.itemIcon, itemPrice: item.itemPrice, itemDescription: item.itemDescription}
+              invEmbed.addField(`${item.itemIcon} __${item.itemName}__ x ${itemData[`${item.itemName}`]['itemCount']}`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
+            }
+
+
           }
+
+
           return message.channel.send(invEmbed)
         }
       } else {

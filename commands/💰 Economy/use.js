@@ -10,26 +10,30 @@ module.exports = {
   usage: '<item name>',
   async execute(message, args, profileData) {
 
-    const item = args[0]
-      .toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ');
+    args = args.join(' ')
+    let item = args.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
 
     let idx = profileData.inventory.findIndex(i => i.itemName==`${item}`);
 
     if(idx !== -1) {
-      if (item == 'Cookie') {
-        await profileData.inventory.splice(idx, 1);
-        await profileData.save();
+      if (profileData.inventory[idx].itemType == 'CONSUMABLE') {
         return message.lineReply(
-          flashEmbed.display('GREEN', `${message.author.username},`, `You ate a cookie. Yummy!`)
+          flashEmbed.display('RED', `${message.author.username},`, `You can't **use** this item. Did you mean to **eat** it instead?`)
         )
       }
 
       if (item == 'Gun') {
         return message.lineReply(
-          flashEmbed.display('BLACK', `${message.author.username},`, `You pull out your gun and stare at it for a bit. \nMaybe you could use this for **rob**bing someone...`)
+          flashEmbed.display('BLACK', `${message.author.username},`, `You pull out your gun and stare at it for a bit. \n Maybe you could use this for **rob**bing someone...`)
+        )
+      }
+
+      if (item == 'Fishing Rod') {
+        return message.lineReply(
+          flashEmbed.display('AQUA', `${message.author.username},`, `You pull out your fishing rod and stare at it for a bit. \n Maybe you could use this for **fish**ing...`)
         )
       }
 

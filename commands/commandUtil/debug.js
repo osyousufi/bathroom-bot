@@ -1,9 +1,11 @@
 const Discord = require('discord.js');
+const flashEmbed = require('../../utility/flash-embed.js');
+
 module.exports = {
   name: "debug",
   // cooldown: 86400,
   description: "debug command for osyou",
-  async execute(message, args) {
+  async execute(message, args, profileData, client, prefix) {
 
     message.channel.send('debugging')
 

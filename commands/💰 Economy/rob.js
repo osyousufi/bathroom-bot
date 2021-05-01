@@ -10,7 +10,7 @@ module.exports = {
   usage: '<@username>',
   aliases: ['steal'],
   description: "Rob a user. Having a gun increases the chance!",
-  cooldown: 1,
+  cooldown: 600,
   async execute(message, args, profileData, client, prefix) {
 
     const taggedUser = message.mentions.users.first();

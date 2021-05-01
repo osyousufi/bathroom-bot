@@ -36,9 +36,19 @@ module.exports = {
 
     } else {
 
+      let authorData;
+      try {
+        authorData = await profileModel.findOne({ userID: message.author.id });
+        if(!authorData) {
+          profileHandler.set(profileModel, message.author);
+        }
+      } catch (e) {
+        console.log(e)
+      }
+
       try {
         await message.channel.send(
-          flashEmbed.display('GREEN', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.wallet}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
+          flashEmbed.display('GREEN', `${message.author.username}'s balance:`, `Wallet: **\`${authorData.wallet}\`** rupees \n\nBank: **\`${authorData.bank}\`** rupees`)
         );
       } catch (err) {
         await message.lineReply(

@@ -36,7 +36,11 @@ module.exports = {
 	      return message.lineReply(
 	        flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
 	      )
-	    }
+	    } else if (amount > 250000) {
+				return message.lineReply(
+	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be less than 250000 rupees!`)
+	      )
+			}
 
 			let deck = [];
 			let playerCards = [];
@@ -84,10 +88,10 @@ module.exports = {
 
 						await profileModel.findOneAndUpdate({
 			        userID: message.author.id
-			      }, { $inc: {wallet: (amount * 2.5), "bjStats.wins": +1} })
+			      }, { $inc: {wallet: (amount * 3.5), "bjStats.wins": +1} })
 
 			      await bjEmbed.setDescription('**BLACKJACK!** You win!').setColor('#800080');
-						await message.lineReply(`**You won \`${amount * 1.5}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount * 1.5)}\` rupees left in your wallet**`);
+						await message.lineReply(`**You won \`${amount * 3.5}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount * 3.5)}\` rupees left in your wallet**`);
 						await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 						return await message.channel.send(bjEmbed)
@@ -157,7 +161,7 @@ module.exports = {
 			const stand = () => {
 
 		    if (!gameOver) {
-		      while (houseValue <= 17) {
+		      while (houseValue < 17) {
 
 		        let endDeck = deck.pop();
 		        if (endDeck.cardValue === 'A' && houseValue > 10) {

@@ -11,11 +11,11 @@ module.exports = {
   aliases: ['purchase'],
   async execute(message, args, profileData) {
 
-    const item = args[0]
-      .toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ');
+    args = args.join(' ')
+    let item = args.toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
 
     for (let product of storeItems.list) {
       if (Object.values(product).includes(item)) {

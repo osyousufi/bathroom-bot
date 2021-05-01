@@ -5,50 +5,20 @@ const Discord = require('discord.js');
 module.exports = {
   name: "leaderboard",
   aliases: ['lb', 'rich', 'richest'],
-  cooldown: 3,
+  cooldown: 5,
   description: "Display leaderboard for the guild.",
   async execute(message, args, profileData, client) {
 
-    let usersArr = [];
-    try {
-      await profileModel.find({$or: [{bank: {$gt: 1400}}, {wallet: {$gt: 1400}}]}, async (err, users) => {
-         if (err) {
-           console.log(err)
-         } else {
-           await users.forEach(async (user) => {
-             const userName = await client.users.fetch(user.userID);
-             const netWorth = await (user.wallet + user.bank);
-             let userObj = {
-               userName: userName.username,
-               value: netWorth
-             }
+    let lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('GOLD');
+    let sortedUsers = await profileModel.find({}, null, {sort: { bank : -1 }}, (err, res) => {});
 
-            usersArr.push(userObj);
-           })
-         }
+    sortedUsers = sortedUsers.slice(0, 10)
+    await sortedUsers.forEach(async (user, index) => {
+      const userName = await client.users.cache.find(u => u.id === user.userID)
+      await lbEmbed.addField(`${(index + 1)}. ${userName.username}`, `Net worth: \`${user.bank + user.wallet}\` rupees`);
+    });
 
-      });
-
-      if (usersArr.length == 0) {
-        return message.lineReply(
-          flashEmbed.display('RED', `${message.author.username},`, `Error. Please wait a bit before using this command.`)
-        )
-      }
-      usersArr.sort((a, b) => b.value - a.value);
-      usersArr = usersArr.slice(0, 10);
-
-      const lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('#00FF00');
-
-      for (let index = 0; index < usersArr.length; index++) {
-        lbEmbed.addField(`${(index + 1)}. ${usersArr[index].userName}`, `Net worth: \`${usersArr[index].value}\` rupees`);
-      }
-
-      return message.channel.send(lbEmbed)
-
-
-    } catch (e) {
-      console.log(e)
-    }
+    return message.channel.send(lbEmbed);
 
   }
 }
