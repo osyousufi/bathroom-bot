@@ -7,55 +7,66 @@ module.exports = {
   name: "buy",
   description: "Buy an item",
   args: true,
-  usage: '<item name>',
+  usage: '<item name> amount(optional)',
   aliases: ['purchase'],
-  async execute(message, args, profileData) {
+  async execute(message, args, profileData, client, prefix) {
 
-    args = args.join(' ')
-    let item = args.toLowerCase()
-    .split(' ')
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(' ');
+    let productName = args[0].toLowerCase()
+    let amount = args[1];
+    let totalPrice;
 
-    for (let product of storeItems.list) {
-      if (Object.values(product).includes(item)) {
-        if (profileData.wallet < product.itemPrice) {
-          return message.lineReply(
-            flashEmbed.display('RED', `${message.author.username},`, `You do not have enough money to buy this item!`)
-          );
-        } else if (profileData.inventory.length >= 10) {
-          return message.lineReply(
-            flashEmbed.display('RED', `${message.author.username},`, `Your inventory is full!`)
-          );
-        }
+    const inStock = storeItems.list.some(i => i.itemName == productName)
 
-        await profileModel.findOne({
-          userID: message.author.id
-        }, (err, res) => {
-          if(res.inventory) {
-            res.inventory.push(product)
-            res.save()
-          } else {
-            return message.lineReply(
-              flashEmbed.display('#000000', `${message.author.username},`, `Inventory has been configured, use this command again.`)
-            );
-          }
-        });
-
-        await profileModel.findOneAndUpdate({
-          userID: message.author.id
-        }, { $inc: { wallet: -product.itemPrice} });
-
+    if (inStock) {
+      if (!amount) {
+        amount = 1
+      } else if (amount % 1 !== 0 || amount < 1) {
         return message.lineReply(
-          flashEmbed.display('GREEN', `${message.author.username},`, `Successfully purchased ${product.itemIcon} __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
-        );
+          flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid amount!`)
+        )
       }
+
+      product = storeItems.list.find(i => i.itemName == productName)
+      totalPrice = product.itemPrice * amount
+
+      if (totalPrice > profileData.wallet) {
+        return message.lineReply(
+          flashEmbed.display('RED', `${message.author.username},`, `You cannot afford that!`)
+        )
+      }
+
+
+      await profileModel.findOne({
+        userID: message.author.id
+      }, (err, res) => {
+
+        const inInventory = res.inventory.find(i => i.itemName == product.itemName)
+
+        if (!inInventory) {
+          product.itemCount = parseInt(amount)
+          res.inventory.push(product)
+          res.save()
+        } else {
+          res.inventory.pop(inInventory)
+          inInventory.itemCount = parseInt(inInventory.itemCount) + parseInt(amount)
+          res.inventory.push(inInventory)
+          res.save()
+        }
+        return message.lineReply(
+          flashEmbed.display('GREEN', `${message.author.username},`, `Bought **x${amount}** ${product.itemIcon} __${product.displayName}__ for \`${totalPrice}\` rupees`)
+        )
+      });
+
+      await profileModel.findOneAndUpdate({
+        userID: message.author.id
+      }, { $inc: {wallet: -totalPrice} })
+
+
+    } else {
+      return message.lineReply(
+        flashEmbed.display('RED', `${message.author.username},`, `Item not found! \n Try removing any spaces!`)
+      )
     }
-
-
-    return message.lineReply(
-      flashEmbed.display('RED', `${message.author.username},`, `This item is not in the store!`)
-    );
 
   }
 }

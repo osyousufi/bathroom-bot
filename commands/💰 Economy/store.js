@@ -10,7 +10,7 @@ module.exports = {
       .setTitle('Store')
 
     for (let item of storeItems.list) {
-      storeEmbed.addField(`${item.itemIcon} __${item.itemName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`);
+      storeEmbed.addField(`${item.itemIcon} __${item.displayName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`);
     }
 
     return message.channel.send(storeEmbed);

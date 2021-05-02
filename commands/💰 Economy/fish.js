@@ -5,57 +5,67 @@ const profileModel = require('../../models/profileSchema');
 
 module.exports = {
   name: "fish",
-  cooldown: 3,
+  cooldown: 120,
   description: "Go fishing! Requires a fishing rod.",
   async execute(message, args, profileData, client, prefix) {
 
-    let idx = profileData.inventory.findIndex(item => item.itemName=="Fishing Rod");
+    let idx = profileData.inventory.findIndex(item => item.itemName=='fishingrod');
 
     const fishData = {
       'SALMON': {
-        itemName: 'Salmon',
+        displayName: 'Salmon',
+        itemName: 'salmon',
         itemIcon: '🐟',
         itemDescription: 'Low-tier catch. Smells funny.',
         itemPrice: 99,
         itemType: 'CONSUMABLE',
-        catchRate: 99,
+        catchRate: 75,
         failRate: 0,
+        itemCount: 1,
       },
       'BLOWFISH': {
-        itemName: 'Blowfish',
+        displayName: 'Blowfish',
+        itemName: 'blowfish',
         itemIcon: '🐡',
         itemDescription: 'Low-tier catch. Becareful not to touch it!',
         itemPrice: 360,
         itemType: 'CONSUMABLE',
-        catchRate: 80,
-        failRate: 0,
+        catchRate: 65,
+        failRate: 10,
+        itemCount: 1,
       },
       'OCTOPUS': {
-        itemName: 'Octopus',
+        displayName: 'Octopus',
+        itemName: 'octopus',
         itemIcon: '🐙',
         itemDescription: 'Mid-tier catch. Its tentacles look slimey.',
         itemPrice: 1200,
         itemType: 'CONSUMABLE',
-        catchRate: 70,
-        failRate: 10,
+        catchRate: 44,
+        failRate: 25,
+        itemCount: 1,
       },
       'TROPICFISH': {
-        itemName: 'Tropicfish',
+        displayName: 'Tropical Fish',
+        itemName: 'tropicalfish',
         itemIcon: '🐠',
         itemDescription: 'Rare catch. Has a nice gold tint to it.',
         itemPrice: 6000,
         itemType: 'CONSUMABLE',
-        catchRate: 45,
+        catchRate: 35,
         failRate: 0,
+        itemCount: 1,
       },
       'SHARK': {
-        itemName: 'Shark',
+        displayName: 'Shark',
+        itemName: 'shark',
         itemIcon: '🦈',
         itemDescription: 'Legendary catch. Extremely sought after in the upper class.',
         itemPrice: 30000,
         itemType: 'CONSUMABLE',
-        catchRate: 30,
-        failRate: 45,
+        catchRate: 25,
+        failRate: 50,
+        itemCount: 1,
       },
     }
 
@@ -73,7 +83,7 @@ module.exports = {
         const catchChance = chance.bool({likelihood: fish.catchRate});
 
         if (catchChance) {
-          result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully caught: ${fish.itemIcon} __${fish.itemName}__`)
+          result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully caught: ${fish.itemIcon} __${fish.displayName}__`)
           await profileModel.findOne({
               userID: message.author.id
             }, (err, res) => {

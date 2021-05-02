@@ -10,72 +10,60 @@ module.exports = {
   usage: '<item name> <amount>',
   async execute(message, args, profileData, client, prefix) {
 
-    const item = args[0]
-      .toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ');
+    let productName = args[0].toLowerCase()
+    let amount = args[1];
+    let totalPrice;
+
+    const inStock = profileData.inventory.find(i => i.itemName == productName)
+
+    if (inStock) {
+
+      if (!amount) {
+        amount = 1
+      } else if (amount.toLowerCase() == 'all') {
+        amount = inStock.itemCount
+      }
+      else if (amount % 1 !== 0 || amount < 1 || amount > inStock.itemCount) {
+        return message.lineReply(
+          flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid amount!`)
+        )
+      }
+
+      if (inStock.itemType == 'CONSUMABLE') {
+        totalPrice = amount * inStock.itemPrice
+      } else {
+        totalPrice = amount * (inStock.itemPrice * 0.5)
+      }
+
+      await profileModel.findOne({
+        userID: message.author.id
+      }, (err, res) => {
 
 
+        res.inventory.pop(inStock)
+        inStock.itemCount = parseInt(inStock.itemCount) - parseInt(amount)
+        if (inStock.itemCount == 0) {
+          res.save()
+        } else {
+          res.inventory.push(inStock)
+          res.save()
+        }
 
+        return message.lineReply(
+          flashEmbed.display('GREEN', `${message.author.username},`, `Sold **x${amount}** ${inStock.itemIcon} __${inStock.displayName}__ for \`${totalPrice}\` rupees`)
+        )
+      });
 
-    // let total = 0;
-    // for (let product of profileData.inventory) {
-    //   if (Object.values(product).includes(item)) {
-    //     total+=1;
-    //
-    //     // await profileModel.findOne({
-    //     //   userID: message.author.id
-    //     // }, (err, res) => {
-    //     //   if(res.inventory) {
-    //     //     res.inventory.pop(product)
-    //     //     res.save()
-    //     //   } else {
-    //     //     return message.lineReplyNoMention(
-    //     //       flashEmbed.display('#000000', `${message.author.username},`, `Inventory has been configured, use this command again.`)
-    //     //     );
-    //     //   }
-    //     // });
-    //     //
-    //     // await profileModel.findOneAndUpdate({
-    //     //   userID: message.author.id
-    //     // }, { $inc: { wallet: product.itemPrice} });
-    //     //
-    //     // return message.lineReplyNoMention(
-    //     //   flashEmbed.display('green', `${message.author.username},`, `Successfully sold __${product.itemName}__ for \`${product.itemPrice}\` rupees!`)
-    //     // );
-    //   }
-    // }
-    let amount = args[1]
+      await profileModel.findOneAndUpdate({
+        userID: message.author.id
+      }, { $inc: {wallet: +totalPrice} });
 
-    let total = 0
-    Object.values(profileData.inventory).forEach(i => i.itemName == item ? total+=1 : null)
-
-    if (total == 0) {
+    } else {
       return message.lineReply(
-        flashEmbed.display('RED', `${message.author.username},`, `This item is not in your inventory!`)
+        flashEmbed.display('RED', `${message.author.username},`, `Item not found! \n Try removing any spaces!`)
       )
     }
 
-     if (!amount) {
-      return message.lineReply(
-        flashEmbed.display('RED', `${message.author.username},`, `Please enter an amount!`)
-      )
-    } else if(amount.toLowerCase() == 'all') {
-      amount = total
-    } else if (amount % 1 !== 0 || amount < 1) {
-      return message.lineReply(
-        flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid amount!`)
-      )
-    } else if (amount > total) {
-      return message.lineReply(
-        flashEmbed.display('RED', `${message.author.username},`, `You do not have that many of the specified item!`)
-      )
-    }
-
-
-
-    console.log(amount)
 
   }
 }
