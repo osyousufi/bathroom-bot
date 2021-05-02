@@ -12,6 +12,7 @@ module.exports = {
 	async execute(message, args, profileData, client, prefix) {
 
 		let amount = args[0];
+		const maxBet = 50000;
 
 		try {
 			const bjEmbed = new Discord.MessageEmbed()
@@ -26,7 +27,12 @@ module.exports = {
             flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
           )
         }
-				amount = profileData.wallet
+
+				if(profileData.wallet > maxBet) {
+	        amount  = maxBet
+	      } else {
+	        amount = profileData.wallet
+	      }
 
 			} else if (amount % 1 !== 0 || amount < 10) {
 	      return message.lineReply(
@@ -36,9 +42,9 @@ module.exports = {
 	      return message.lineReply(
 	        flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
 	      )
-	    } else if (amount > 250000) {
+	    } else if (amount > maxBet) {
 				return message.lineReply(
-	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be less than 250000 rupees!`)
+	        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be less than \`${maxBet}\` rupees!`)
 	      )
 			}
 

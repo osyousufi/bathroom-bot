@@ -24,7 +24,9 @@ module.exports = {
           }
         }
       })
-      defaultChannel.send(`Yo! Get started with **\`//help\`**`);
+      defaultChannel.send(
+        flashEmbed.display('GOLD', `Yo!`, `Get started with **\`//help\`**`)
+      );
     })
 
 

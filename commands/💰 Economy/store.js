@@ -8,6 +8,7 @@ module.exports = {
   async execute(message, args, profileData, client, prefix) {
     const storeEmbed = new Discord.MessageEmbed()
       .setTitle('Store')
+      .setFooter(`Tip: buy items with ${prefix}buy <itemname>`)
 
     for (let item of storeItems.list) {
       storeEmbed.addField(`${item.itemIcon} __${item.displayName}__`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`);

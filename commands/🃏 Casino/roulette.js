@@ -13,7 +13,7 @@ module.exports = {
 
     let amount = args[0];
     let space = args.slice(1).join(' ');
-
+    const maxBet = 100000;
 
 
     const validSpaces =  [
@@ -44,7 +44,6 @@ module.exports = {
     }
 
     const result = chance.integer({min: 0, max: 36});
-    // const result = 1;
 
     const rlEmbed = new Discord.MessageEmbed()
       .setTitle(`${message.author.username}'s roulette game:`)
@@ -67,7 +66,13 @@ module.exports = {
           flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
         )
       }
-      amount = profileData.wallet
+
+      if(profileData.wallet > maxBet) {
+        amount  = maxBet
+      } else {
+        amount = profileData.wallet
+      }
+
 
     } else if (amount % 1 !== 0 || amount < 10) {
       return message.lineReply(
@@ -77,9 +82,9 @@ module.exports = {
       return message.lineReply(
         flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
       )
-    } else if (amount > 250000) {
+    } else if (amount > maxBet) {
       return message.lineReply(
-        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be less than 250000 rupees!`)
+        flashEmbed.display('#FF0000', `${message.author.username},`, `Bet amount must be less than \`${maxBet}\` rupees!`)
       )
     } else {
       amount = parseInt(amount)
@@ -114,7 +119,7 @@ module.exports = {
     if (result == parseInt(/^{space}$/)) {
 
       winnings = (amount * 36);
-      
+
       gameWon = true;
       await profileModel.findOneAndUpdate({
         userID: message.author.id

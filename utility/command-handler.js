@@ -10,6 +10,14 @@ module.exports = {
 
     const messageCheck = async (prefix) => {
 
+
+      if (message.content == ('<@!820429062676938823>')) {
+        message.channel.send(
+          flashEmbed.display(`DARK_PURPLE`, `${message.author.username}`, `My prefix is: \`${prefix}\``)
+        )
+      }
+
+
       //check for profile data, if none, create one
       let profileData;
       try {
@@ -110,6 +118,7 @@ module.exports = {
         messageCheck(prefix);
       }
     }
+
 
 
 
