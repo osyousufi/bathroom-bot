@@ -101,9 +101,15 @@ module.exports = {
         }
       } else {
         result = flashEmbed.display('RED', `${message.author.username},`, `Things take a turn for the worse and your fishing rod gets pulled in! \n Better luck next time...`)
-        let idx = profileData.inventory.findIndex(i => i.itemName==`Fishing Rod`);
-        await profileData.inventory.splice(idx, 1)
-        await profileData.save();
+
+        if (idx.itemCount == 0) {
+          await profileData.inventory.pop(idx)
+          await profileData.save()
+        } else {
+          idx.itemCount = idx.itemCount - 1
+          await profileData.save()
+        }
+
       }
 
     }

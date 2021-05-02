@@ -11,7 +11,7 @@ module.exports = {
   description: "Give a user money",
   async execute(message, args, profileData, client, prefix) {
 
-    const amount = args[1];
+    let amount = args[1];
     const taggedUser = message.mentions.users.first();
 
     try {
@@ -19,6 +19,8 @@ module.exports = {
         return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Please specify an amount to pay!`)
         )
+      } else if (amount.toLowerCase() == 'all') {
+        amount = profileData.wallet
       } else if (amount % 1 !== 0 || amount <= 0) {
         return message.lineReply(
           flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number! \nThe proper usage would be: \`${prefix}<@username> <amount>\``)

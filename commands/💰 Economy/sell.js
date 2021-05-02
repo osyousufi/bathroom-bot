@@ -37,16 +37,16 @@ module.exports = {
 
       await profileModel.findOne({
         userID: message.author.id
-      }, (err, res) => {
+      }, async (err, res) => {
 
 
         res.inventory.pop(inStock)
         inStock.itemCount = parseInt(inStock.itemCount) - parseInt(amount)
         if (inStock.itemCount == 0) {
-          res.save()
+          await res.save()
         } else {
           res.inventory.push(inStock)
-          res.save()
+          await res.save()
         }
 
         return message.lineReply(

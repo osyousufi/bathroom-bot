@@ -113,7 +113,8 @@ module.exports = {
 
     if (result == parseInt(/^{space}$/)) {
 
-      winnings = amount + (amount * 35);
+      winnings = (amount * 36);
+      
       gameWon = true;
       await profileModel.findOneAndUpdate({
         userID: message.author.id
@@ -122,7 +123,7 @@ module.exports = {
     } else if (Object.keys(spaceToNumbers).indexOf(space) !== -1) {
       if (spaceToNumbers[space].indexOf(result) !== -1) {
         if (checkValue('red') || checkValue('black') || checkValue('even') || checkValue('odd')) {
-          winnings = amount + (amount);
+          winnings = amount;
 
           gameWon = true;
 
@@ -132,7 +133,7 @@ module.exports = {
 
         } else if (checkValue('1st') || checkValue('2nd') || checkValue('3rd') || checkValue('1-12') ||resultKey == checkValue('13-24') || checkValue('25-36')) {
 
-          winnings = amount + (amount*2);
+          winnings = amount * 2;
 
           gameWon = true;
 
