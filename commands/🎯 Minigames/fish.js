@@ -5,11 +5,11 @@ const profileModel = require('../../models/profileSchema');
 
 module.exports = {
   name: "fish",
-  cooldown: 120,
+  cooldown: 60,
   description: "Go fishing! Requires a fishing rod.",
   async execute(message, args, profileData, client, prefix) {
 
-    let idx = profileData.inventory.findIndex(item => item.itemName=='fishingrod');
+    let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
     const fishData = {
       'SALMON': {
@@ -19,7 +19,7 @@ module.exports = {
         itemDescription: 'Low-tier catch. Smells funny.',
         itemPrice: 99,
         itemType: 'CONSUMABLE',
-        catchRate: 75,
+        catchRate: 80,
         failRate: 0,
         itemCount: 1,
       },
@@ -30,7 +30,7 @@ module.exports = {
         itemDescription: 'Low-tier catch. Becareful not to touch it!',
         itemPrice: 360,
         itemType: 'CONSUMABLE',
-        catchRate: 65,
+        catchRate: 70,
         failRate: 10,
         itemCount: 1,
       },
@@ -41,7 +41,7 @@ module.exports = {
         itemDescription: 'Mid-tier catch. Its tentacles look slimey.',
         itemPrice: 1200,
         itemType: 'CONSUMABLE',
-        catchRate: 44,
+        catchRate: 45,
         failRate: 25,
         itemCount: 1,
       },
@@ -85,15 +85,26 @@ module.exports = {
         if (catchChance) {
           result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully caught: ${fish.itemIcon} __${fish.displayName}__`)
           await profileModel.findOne({
-              userID: message.author.id
-            }, (err, res) => {
+            userID: message.author.id
+          }, async (err, res) => {
               if(res.inventory.length >= 10) {
                 return message.lineReply(
                   flashEmbed.display('RED', `${message.author.username},`, `Your inventory is full!`)
                 )
               } else {
-                res.inventory.push(fish)
-                res.save()
+
+                const inInventory = await res.inventory.find(i => i.itemName == fish.itemName)
+                const idx = res.inventory.indexOf(inInventory)
+
+                if (inInventory) {
+                  inInventory.itemCount = parseInt(inInventory.itemCount) + 1
+                  res.inventory.set(idx, inInventory)
+                  await res.save()
+                } else {
+                  await res.inventory.push(fish)
+                  await res.save()
+                }
+
               }
             });
         } else {
@@ -102,19 +113,28 @@ module.exports = {
       } else {
         result = flashEmbed.display('RED', `${message.author.username},`, `Things take a turn for the worse and your fishing rod gets pulled in! \n Better luck next time...`)
 
-        if (idx.itemCount == 0) {
-          await profileData.inventory.pop(idx)
-          await profileData.save()
-        } else {
-          idx.itemCount = idx.itemCount - 1
-          await profileData.save()
-        }
+          await profileModel.findOne({
+            userID: message.author.id
+          }, async (err, res) => {
+            const selectedRod = await res.inventory.find(i => i.itemName == 'fishingrod')
+            const idx = res.inventory.indexOf(selectedRod)
+
+            selectedRod.itemCount = parseInt(selectedRod.itemCount) - 1
+            res.inventory.set(idx, selectedRod)
+            await res.save()
+
+            if (selectedRod.itemCount <= 0) {
+              res.inventory.splice(idx, 1)
+              await res.save()
+            }
+
+          })
 
       }
 
     }
 
-    if (idx !== -1) {
+    if (rod) {
 
       const bite = chance.bool({likelihood: 80});
       const luck = chance.integer({ min: 1, max: 100});

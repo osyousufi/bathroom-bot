@@ -11,7 +11,7 @@ module.exports = {
   async execute(message, args, profileData, client, prefix) {
 
     let amount = args[0];
-    const maxBet = 50000;
+    const maxBet = 1000;
     let win = true;
     let multiplier;
 
@@ -24,9 +24,9 @@ module.exports = {
       .setColor('DARK_NAVY')
       .setTitle(`ICON - MULTI`)
       .addFields(
-        { name: '🍉🍉🍉 - 2x', value: '\u200B' },
-      	{ name: '🍇🍇🍇 - 5x', value: '\u200B'},
-      	{ name: '🍒🍒🍒 - 10x', value: '\u200B'},
+        { name: '🍉🍉🍉 - 5x', value: '\u200B' },
+      	{ name: '🍇🍇🍇 - 10x', value: '\u200B'},
+      	{ name: '🍒🍒🍒 - 25x', value: '\u200B'},
 
       )
 
@@ -82,14 +82,14 @@ module.exports = {
     let payout;
 
     if (arraysEqual(slotsArr, [3, 3, 3])) {
+      payout = amount * 25;
+      multiplier = 25
+    } else if (arraysEqual(slotsArr, [2, 2, 2])) {
       payout = amount * 10;
       multiplier = 10
-    } else if (arraysEqual(slotsArr, [2, 2, 2])) {
+    } else if (arraysEqual(slotsArr, [1, 1, 1])) {
       payout = amount * 5;
       multiplier = 5
-    } else if (arraysEqual(slotsArr, [1, 1, 1])) {
-      payout = amount * 2;
-      multiplier = 2
     } else {
       win = false;
     }

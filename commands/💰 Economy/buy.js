@@ -7,6 +7,7 @@ module.exports = {
   name: "buy",
   description: "Buy an item",
   args: true,
+  cooldown: 6,
   usage: '<item name> amount(optional)',
   aliases: ['purchase'],
   async execute(message, args, profileData, client, prefix) {
@@ -15,7 +16,7 @@ module.exports = {
     let amount = args[1];
     let totalPrice;
 
-    const inStock = storeItems.list.some(i => i.itemName == productName)
+    const inStock = await storeItems.list.some(i => i.itemName == productName)
 
     if (inStock) {
       if (!amount) {
@@ -26,7 +27,7 @@ module.exports = {
         )
       }
 
-      product = storeItems.list.find(i => i.itemName == productName)
+      let product = await storeItems.list.find(i => i.itemName == productName)
       totalPrice = product.itemPrice * amount
 
       if (totalPrice > profileData.wallet) {
@@ -38,19 +39,20 @@ module.exports = {
 
       await profileModel.findOne({
         userID: message.author.id
-      }, (err, res) => {
+      }, async (err, res) => {
 
-        const inInventory = res.inventory.find(i => i.itemName == product.itemName)
+        const inInventory = await res.inventory.find(i => i.itemName == product.itemName)
+
+        const idx = res.inventory.indexOf(inInventory)
 
         if (!inInventory) {
           product.itemCount = parseInt(amount)
           res.inventory.push(product)
-          res.save()
+          await res.save()
         } else {
-          res.inventory.pop(inInventory)
           inInventory.itemCount = parseInt(inInventory.itemCount) + parseInt(amount)
-          res.inventory.push(inInventory)
-          res.save()
+          res.inventory.set(idx, inInventory)
+          await res.save()
         }
         return message.lineReply(
           flashEmbed.display('GREEN', `${message.author.username},`, `Bought **x${amount}** ${product.itemIcon} __${product.displayName}__ for \`${totalPrice}\` rupees`)

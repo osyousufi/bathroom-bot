@@ -14,43 +14,54 @@ module.exports = {
     let amount = args[1];
     let totalPrice;
 
-    const inStock = profileData.inventory.find(i => i.itemName == productName)
+    const inStock = await profileData.inventory.some(i => i.itemName == productName);
+
+    // await profileModel.findOne({
+    //   userID: message.author.id
+    // }, async (err, res) => {
+    //   inStock = res.inventory.find(i => i.itemName == productName)
+    // });
+
 
     if (inStock) {
+
+      let product = await profileData.inventory.find(i => i.itemName == productName)
 
       if (!amount) {
         amount = 1
       } else if (amount.toLowerCase() == 'all') {
-        amount = inStock.itemCount
+        amount = product.itemCount
       }
-      else if (amount % 1 !== 0 || amount < 1 || amount > inStock.itemCount) {
+      else if (amount % 1 !== 0 || amount < 1 || amount > product.itemCount) {
         return message.lineReply(
           flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid amount!`)
         )
       }
 
-      if (inStock.itemType == 'CONSUMABLE') {
-        totalPrice = amount * inStock.itemPrice
+      if (product.itemType == 'CONSUMABLE') {
+        totalPrice = amount * product.itemPrice
       } else {
-        totalPrice = amount * (inStock.itemPrice * 0.5)
+        totalPrice = amount * (product.itemPrice * 0.5)
       }
 
       await profileModel.findOne({
         userID: message.author.id
       }, async (err, res) => {
 
+        const inInventory = await res.inventory.find(i => i.itemName == product.itemName)
+        const idx = res.inventory.indexOf(inInventory)
 
-        res.inventory.pop(inStock)
-        inStock.itemCount = parseInt(inStock.itemCount) - parseInt(amount)
-        if (inStock.itemCount == 0) {
-          await res.save()
-        } else {
-          res.inventory.push(inStock)
+        inInventory.itemCount = parseInt(inInventory.itemCount) - parseInt(amount)
+        res.inventory.set(idx, inInventory)
+        await res.save()
+
+        if (inInventory.itemCount <= 0) {
+          res.inventory.splice(idx, 1)
           await res.save()
         }
 
-        return message.lineReply(
-          flashEmbed.display('GREEN', `${message.author.username},`, `Sold **x${amount}** ${inStock.itemIcon} __${inStock.displayName}__ for \`${totalPrice}\` rupees`)
+        return message .lineReply(
+          flashEmbed.display('GREEN', `${message.author.username},`, `Sold **x${amount}** ${inInventory.itemIcon} __${inInventory.displayName}__ for \`${totalPrice}\` rupees`)
         )
       });
 
