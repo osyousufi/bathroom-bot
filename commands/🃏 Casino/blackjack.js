@@ -97,7 +97,7 @@ module.exports = {
 			      }, { $inc: {wallet: (amount * 3.5), "bjStats.wins": +1} })
 
 			      await bjEmbed.setDescription('**BLACKJACK!** You win!').setColor('#800080');
-						await message.lineReply(`**You won \`${amount * 3.5}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount * 3.5)}\` rupees left in your wallet**`);
+						await message.lineReply(`**You won \`${amount * 2.5}\` rupees! \nYou have: \`${profileData.wallet + parseInt(amount * 3.5)}\` rupees left in your wallet**`);
 						await bjEmbed.setFooter(`Wins: ${profileData.get('bjStats.wins') + 1} || Losses: ${profileData.get('bjStats.losses')}`);
 
 						return await message.channel.send(bjEmbed)

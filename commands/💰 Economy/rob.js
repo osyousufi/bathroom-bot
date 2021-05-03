@@ -83,7 +83,7 @@ module.exports = {
 
       if (profileData.inventory) {
 
-        let idx = profileData.inventory.findIndex(item => item.itemName=="Gun");
+        let idx = profileData.inventory.findIndex(item => item.itemName=="handgun");
 
         if (idx !== -1) {
 

@@ -55,7 +55,7 @@ module.exports = {
       }, (err, res) => {
         if (!res.inventory.length) {
           invEmbed
-            .setTitle(`${taggedUser.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
+            .setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
             .setDescription(`Nothing here 😢`)
         }
         invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
