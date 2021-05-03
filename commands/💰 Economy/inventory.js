@@ -32,7 +32,6 @@ module.exports = {
             invEmbed
               .setTitle(`${taggedUser.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
               .setDescription(`Nothing here 😢`)
-            return
           }
 
           invEmbed.setTitle(`${taggedUser.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
@@ -58,15 +57,15 @@ module.exports = {
           invEmbed
             .setTitle(`${taggedUser.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
             .setDescription(`Nothing here 😢`)
-          return
         }
         invEmbed.setTitle(`${message.author.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
         for (let item of res.inventory) {
            invEmbed.addField(`${item.itemIcon} __${item.displayName}__ x ${item.itemCount}`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
         }
 
+        return message.channel.send(invEmbed)
       });
-      return message.channel.send(invEmbed)
+
 
     } catch(e) {
       return message.lineReply(
