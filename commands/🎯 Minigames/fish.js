@@ -12,14 +12,58 @@ module.exports = {
     let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
     const fishData = {
+      'SHRIMP': {
+        displayName: 'Shrimp',
+        itemName: 'shrimp',
+        itemIcon: '🦐',
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 50,
+        itemType: 'MARKET',
+        catchRate: 99,
+        failRate: 0,
+        itemCount: 1,
+      },
       'SALMON': {
         displayName: 'Salmon',
         itemName: 'salmon',
         itemIcon: '🐟',
-        itemDescription: 'Low-tier catch. Smells funny.',
-        itemPrice: 300,
-        itemType: 'CONSUMABLE',
-        catchRate: 85,
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 100,
+        itemType: 'MARKET',
+        catchRate: 90,
+        failRate: 0,
+        itemCount: 1,
+      },
+      'CRAB': {
+        displayName: 'Crab',
+        itemName: 'crab',
+        itemIcon: '🦀',
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 150,
+        itemType: 'MARKET',
+        catchRate: 90,
+        failRate: 0,
+        itemCount: 1,
+      },
+      'LOBSTER': {
+        displayName: 'Lobster',
+        itemName: 'lobster',
+        itemIcon: '🦞',
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 250,
+        itemType: 'MARKET',
+        catchRate: 90,
+        failRate: 0,
+        itemCount: 1,
+      },
+      'SQUID': {
+        displayName: 'Squid',
+        itemName: 'squid',
+        itemIcon: '🦑',
+        itemDescription: 'Mid-tier catch.',
+        itemPrice: 500,
+        itemType: 'MARKET',
+        catchRate: 90,
         failRate: 0,
         itemCount: 1,
       },
@@ -27,22 +71,22 @@ module.exports = {
         displayName: 'Blowfish',
         itemName: 'blowfish',
         itemIcon: '🐡',
-        itemDescription: 'Low-tier catch. Becareful not to touch it!',
-        itemPrice: 360,
-        itemType: 'CONSUMABLE',
-        catchRate: 80,
-        failRate: 3,
+        itemDescription: 'Mid-tier catch.',
+        itemPrice: 750,
+        itemType: 'MARKET',
+        catchRate: 85,
+        failRate: 0,
         itemCount: 1,
       },
       'OCTOPUS': {
         displayName: 'Octopus',
         itemName: 'octopus',
         itemIcon: '🐙',
-        itemDescription: 'Mid-tier catch. Its tentacles look slimey.',
-        itemPrice: 1200,
-        itemType: 'CONSUMABLE',
-        catchRate: 60,
-        failRate: 20,
+        itemDescription: 'Mid-tier catch.',
+        itemPrice: 1000,
+        itemType: 'MARKET',
+        catchRate: 70,
+        failRate: 10,
         itemCount: 1,
       },
       'TROPICFISH': {
@@ -50,21 +94,54 @@ module.exports = {
         itemName: 'tropicalfish',
         itemIcon: '🐠',
         itemDescription: 'Rare catch. Has a nice gold tint to it.',
-        itemPrice: 9000,
-        itemType: 'CONSUMABLE',
-        catchRate: 45,
+        itemPrice: 5000,
+        itemType: 'MARKET',
+        catchRate: 50,
         failRate: 0,
+        itemCount: 1,
+      },
+      'CROC': {
+        displayName: 'Crocodile',
+        itemName: 'crocodile',
+        itemIcon: '🐊',
+        itemDescription: 'Rare catch. How did this get here?',
+        itemPrice: 15000,
+        itemType: 'MARKET',
+        catchRate: 40,
+        failRate: 30,
+        itemCount: 1,
+      },
+      'DOLPHIN': {
+        displayName: 'Dolphin',
+        itemName: 'dolphin',
+        itemIcon: '🐬',
+        itemDescription: 'Rare catch.',
+        itemPrice: 25000,
+        itemType: 'MARKET',
+        catchRate: 25,
+        failRate: 20,
         itemCount: 1,
       },
       'SHARK': {
         displayName: 'Shark',
         itemName: 'shark',
         itemIcon: '🦈',
-        itemDescription: 'Legendary catch. Extremely sought after in the upper class.',
-        itemPrice: 30000,
-        itemType: 'CONSUMABLE',
-        catchRate: 30,
+        itemDescription: 'Legendary catch. Underworld delicacy.',
+        itemPrice: 50000,
+        itemType: 'MARKET',
+        catchRate: 20,
         failRate: 40,
+        itemCount: 1,
+      },
+      'WHALE': {
+        displayName: 'Whale',
+        itemName: 'whale',
+        itemIcon: '🐋',
+        itemDescription: 'Legendary catch. How the hell did you catch this?!',
+        itemPrice: 100000,
+        itemType: 'MARKET',
+        catchRate: 10,
+        failRate: 45,
         itemCount: 1,
       },
     }
@@ -137,25 +214,80 @@ module.exports = {
     if (rod) {
 
       const bite = chance.bool({likelihood: 85});
-      const luck = chance.integer({ min: 1, max: 100});
+      const luck = chance.integer({ min: 0, max: 100});
+
 
       if (bite) {
-
         fishEmbed.setColor('AQUA')
         fishEmbed.setDescription(`You throw your fishing rod into the ocean... \n **You got a bite!** You attempt to reel in your catch...`)
         await message.channel.send(fishEmbed)
 
-        if(luck > 94) {
-          catchFish('SHARK')
-        } else if (luck < 95  && luck > 84){
-          catchFish('TROPICFISH')
-        } else if (luck < 85  && luck > 64){
-          catchFish('OCTOPUS')
-        } else if (luck < 65  && luck > 35){
-          catchFish('BLOWFISH')
-        } else {
-          catchFish('SALMON')
-        }
+        const options = [
+          'WHALE',
+          'SHARK',
+
+          'DOLPHIN',
+          'CROC',
+          'TROPICFISH',
+          'DOLPHIN',
+          'CROC',
+          'TROPICFISH',
+
+          'OCTOPUS',
+          'BLOWFISH',
+          'SQUID',
+          'OCTOPUS',
+          'BLOWFISH',
+          'SQUID',
+          'OCTOPUS',
+          'BLOWFISH',
+          'SQUID',
+          'OCTOPUS',
+          'BLOWFISH',
+          'SQUID',
+
+
+          'SHRIMP',
+          'SALMON',
+          'CRAB',
+          'LOBSTER',
+          'SHRIMP',
+          'SALMON',
+          'CRAB',
+          'LOBSTER',
+          'SHRIMP',
+          'SALMON',
+          'CRAB',
+          'LOBSTER',
+          'SHRIMP',
+          'SALMON',
+          'CRAB',
+          'LOBSTER',
+          'SHRIMP',
+          'SALMON',
+          'CRAB',
+          'LOBSTER',
+          'SHRIMP',
+          'SALMON',
+          'CRAB',
+          'LOBSTER',
+        ]
+
+        const luck = chance.integer({ min: 0, max: (options.length - 1)});
+        const fish = options[luck];
+        catchFish(fish);
+
+        // if(luck > 94) {
+        //   catchFish('SHARK')
+        // } else if (luck < 95  && luck > 84){
+        //   catchFish('TROPICFISH')
+        // } else if (luck < 85  && luck > 64){
+        //   catchFish('OCTOPUS')
+        // } else if (luck < 65  && luck > 35){
+        //   catchFish('BLOWFISH')
+        // } else {
+        //   catchFish('SALMON')
+        // }
 
         return await message.lineReply(result)
       } else {

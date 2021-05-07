@@ -158,6 +158,15 @@ module.exports = {
 
       }
 
+    } else {
+
+      gameWon = false;
+
+      await profileModel.findOneAndUpdate({
+        userID: message.author.id
+      }, { $inc: {wallet: -winnings, "rlStats.losses": +1} });
+
+
     }
 
     if (gameWon) {

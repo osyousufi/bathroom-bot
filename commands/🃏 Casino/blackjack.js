@@ -24,7 +24,7 @@ module.exports = {
 
 				if (profileData.wallet <= 0) {
           return message.lineReply(
-            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
+            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet!`)
           )
         }
 

@@ -16,16 +16,11 @@ module.exports = {
 
     const inStock = await profileData.inventory.some(i => i.itemName == productName);
 
-    // await profileModel.findOne({
-    //   userID: message.author.id
-    // }, async (err, res) => {
-    //   inStock = res.inventory.find(i => i.itemName == productName)
-    // });
-
-
     if (inStock) {
 
       let product = await profileData.inventory.find(i => i.itemName == productName)
+
+
 
       if (!amount) {
         amount = 1
@@ -38,7 +33,7 @@ module.exports = {
         )
       }
 
-      if (product.itemType == 'CONSUMABLE') {
+      if (product.itemType == 'MARKET') {
         totalPrice = amount * product.itemPrice
       } else {
         totalPrice = amount * (product.itemPrice * 0.5)
