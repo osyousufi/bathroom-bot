@@ -11,7 +11,7 @@ module.exports = {
 
     const invEmbed = new Discord.MessageEmbed()
       .setColor('BLUE')
-      .setFooter(`Tip: ${prefix}use <item name> to use an item`)
+      // .setFooter(`Tip: ${prefix}use <item name> to use an item`)
 
     const taggedUser = message.mentions.users.first();
     const maxSpace = 10;

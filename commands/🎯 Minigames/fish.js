@@ -30,7 +30,7 @@ module.exports = {
         itemDescription: 'Low-tier catch.',
         itemPrice: 100,
         itemType: 'MARKET',
-        catchRate: 90,
+        catchRate: 95,
         failRate: 0,
         itemCount: 1,
       },
@@ -108,7 +108,7 @@ module.exports = {
         itemPrice: 15000,
         itemType: 'MARKET',
         catchRate: 40,
-        failRate: 30,
+        failRate: 20,
         itemCount: 1,
       },
       'DOLPHIN': {
@@ -130,7 +130,7 @@ module.exports = {
         itemPrice: 50000,
         itemType: 'MARKET',
         catchRate: 20,
-        failRate: 40,
+        failRate: 30,
         itemCount: 1,
       },
       'WHALE': {
@@ -140,8 +140,8 @@ module.exports = {
         itemDescription: 'Legendary catch. How the hell did you catch this?!',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 10,
-        failRate: 45,
+        catchRate: 15,
+        failRate: 40,
         itemCount: 1,
       },
     }
@@ -225,6 +225,7 @@ module.exports = {
         const options = [
           'WHALE',
           'SHARK',
+          'SHARK',
 
           'DOLPHIN',
           'CROC',
@@ -232,6 +233,9 @@ module.exports = {
           'DOLPHIN',
           'CROC',
           'TROPICFISH',
+          'DOLPHIN',
+          'CROC',
+          'TROPICFISH',
 
           'OCTOPUS',
           'BLOWFISH',
@@ -246,15 +250,6 @@ module.exports = {
           'BLOWFISH',
           'SQUID',
 
-
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
           'SHRIMP',
           'SALMON',
           'CRAB',
