@@ -19,15 +19,17 @@ module.exports = {
       .setColor('GREEN')
       .setTitle(`${message.author.username}'s slot machine:`)
 
+    let prize1 = 30
+    let prize2 = 20
+    let prize3 = 10
 
     let tableEmbed = new Discord.MessageEmbed()
       .setColor('DARK_NAVY')
       .setTitle(`ICON - MULTI`)
       .addFields(
-        { name: '🍉🍉🍉 - 5x', value: '\u200B' },
-      	{ name: '🍇🍇🍇 - 10x', value: '\u200B'},
-      	{ name: '🍒🍒🍒 - 25x', value: '\u200B'},
-
+        { name: `🍉🍉🍉 - ${prize3}x`, value: '\u200B' },
+      	{ name: `🍇🍇🍇 - ${prize2}x`, value: '\u200B'},
+      	{ name: `🍒🍒🍒 - ${prize1}x`, value: '\u200B'},
       )
 
     const icons = {
@@ -74,25 +76,28 @@ module.exports = {
       return JSON.stringify(a1)==JSON.stringify(a2);
     }
 
-    const first = chance.integer({ min: 1, max: 3});
-    const second = chance.integer({ min: 1, max: 3});
-    const third = chance.integer({ min: 1, max: 3});
+    const first = chance.integer({ min: 1, max: Object.keys(icons).length });
+    const second = chance.integer({ min: 1, max: Object.keys(icons).length });
+    const third = chance.integer({ min: 1, max: Object.keys(icons).length });
+
 
     let slotsArr = [first, second, third]
     let payout;
 
     if (arraysEqual(slotsArr, [3, 3, 3])) {
-      payout = amount * 25;
-      multiplier = 25
+      payout = amount * prize1;
+      multiplier = prize1;
     } else if (arraysEqual(slotsArr, [2, 2, 2])) {
-      payout = amount * 10;
-      multiplier = 10
+      payout = amount * prize2;
+      multiplier = prize2;
     } else if (arraysEqual(slotsArr, [1, 1, 1])) {
-      payout = amount * 5;
-      multiplier = 5
+      payout = amount * prize3;
+      multiplier = prize3;
     } else {
       win = false;
     }
+
+
 
     if (win) {
 

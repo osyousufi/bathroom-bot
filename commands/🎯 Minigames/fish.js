@@ -105,7 +105,7 @@ module.exports = {
         itemName: 'crocodile',
         itemIcon: '🐊',
         itemDescription: 'Rare catch. How did this get here?',
-        itemPrice: 15000,
+        itemPrice: 10000,
         itemType: 'MARKET',
         catchRate: 65,
         failRate: 20,
@@ -116,9 +116,9 @@ module.exports = {
         itemName: 'dolphin',
         itemIcon: '🐬',
         itemDescription: 'Rare catch.',
-        itemPrice: 25000,
+        itemPrice: 20000,
         itemType: 'MARKET',
-        catchRate: 35,
+        catchRate: 55,
         failRate: 20,
         itemCount: 1,
       },
@@ -129,7 +129,7 @@ module.exports = {
         itemDescription: 'Legendary catch. Underworld delicacy.',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 30,
+        catchRate: 20,
         failRate: 30,
         itemCount: 1,
       },
@@ -271,18 +271,6 @@ module.exports = {
         const luck = chance.integer({ min: 0, max: (options.length - 1)});
         const fish = options[luck];
         catchFish(fish);
-
-        // if(luck > 94) {
-        //   catchFish('SHARK')
-        // } else if (luck < 95  && luck > 84){
-        //   catchFish('TROPICFISH')
-        // } else if (luck < 85  && luck > 64){
-        //   catchFish('OCTOPUS')
-        // } else if (luck < 65  && luck > 35){
-        //   catchFish('BLOWFISH')
-        // } else {
-        //   catchFish('SALMON')
-        // }
 
         return await message.lineReply(result)
       } else {

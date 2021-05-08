@@ -16,19 +16,25 @@ module.exports = {
     if(validItem) {
       if (validItem.itemType == 'CONSUMABLE') {
         return message.lineReply(
-          flashEmbed.display('RED', `${message.author.username},`, `You can't **use** this item. Did you mean to **eat** it instead?`)
+          flashEmbed.display('DARK_ORANGE', `${message.author.username},`, `You ate a(n)  ${validItem.itemIcon} __${validItem.displayName}__. Yum!`)
+        )
+      }
+
+      if (validItem.itemType == 'MARKET') {
+        return message.lineReply(
+          flashEmbed.display('GREEN', `${message.author.username},`, `This looks like something merchants would buy. \n Maybe you could **sell** this?`)
         )
       }
 
       if (item == 'handgun') {
         return message.lineReply(
-          flashEmbed.display('BLACK', `${message.author.username},`, `You pull out your gun and stare at it for a bit. \n Maybe you could use this for **rob**bing someone...`)
+          flashEmbed.display('BLACK', `${message.author.username},`, `You pull out your gun and stare at it for a bit. \n Maybe you could use this to **rob** someone...`)
         )
       }
 
       if (item == 'fishingrod') {
         return message.lineReply(
-          flashEmbed.display('AQUA', `${message.author.username},`, `You pull out your fishing rod and stare at it for a bit. \n Maybe you could use this for **fish**ing...`)
+          flashEmbed.display('AQUA', `${message.author.username},`, `You pull out your fishing rod and stare at it for a bit. \n Maybe you could use this to **fish** in the sea...`)
         )
       }
 

@@ -7,7 +7,6 @@ module.exports = {
   name: "buy",
   description: "Buy an item",
   args: true,
-  cooldown: 6,
   usage: '<item name> amount(optional)',
   aliases: ['purchase'],
   async execute(message, args, profileData, client, prefix) {
