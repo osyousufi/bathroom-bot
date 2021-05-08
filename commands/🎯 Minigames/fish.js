@@ -85,7 +85,7 @@ module.exports = {
         itemDescription: 'Mid-tier catch.',
         itemPrice: 1000,
         itemType: 'MARKET',
-        catchRate: 70,
+        catchRate: 80,
         failRate: 10,
         itemCount: 1,
       },
