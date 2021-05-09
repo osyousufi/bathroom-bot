@@ -141,7 +141,7 @@ module.exports = {
         itemDescription: 'Legendary catch. Underworld delicacy.',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 6,
+        catchRate: 5,
         failChance: true,
         itemCount: 1,
       },
@@ -152,7 +152,7 @@ module.exports = {
         itemDescription: 'Legendary catch. How the hell did you catch this?!',
         itemPrice: 300000,
         itemType: 'MARKET',
-        catchRate: 3,
+        catchRate: 2,
         failChance: true,
         itemCount: 1,
       },
@@ -170,7 +170,7 @@ module.exports = {
       let catchChance;
 
       if (ancientrod) {
-        catchChance = chance.bool({likelihood: fish.catchRate + 15});
+        catchChance = chance.bool({likelihood: fish.catchRate + 10});
       } else if (goodrod) {
         catchChance = chance.bool({likelihood: fish.catchRate + 5});
       } else if (oldrod) {
