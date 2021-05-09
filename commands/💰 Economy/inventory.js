@@ -11,13 +11,13 @@ module.exports = {
 
     const invEmbed = new Discord.MessageEmbed()
       .setColor('BLUE')
-      .setThumbnail(`${message.author.displayAvatarURL()}`)
+
 
     const taggedUser = message.mentions.users.first();
     const maxSpace = 10;
 
     if (taggedUser) {
-
+      invEmbed.setThumbnail(`${taggedUser.displayAvatarURL()}`)
       let taggedProfileData = await profileModel.findOne({ userID: taggedUser.id });
       if(!taggedProfileData) {
         profileHandler.set(profileModel, taggedUser);
@@ -49,7 +49,9 @@ module.exports = {
 
     }
 
+
     try {
+      invEmbed.setThumbnail(`${message.author.displayAvatarURL()}`)
       await profileModel.findOne({
         userID: message.author.id
       }, (err, res) => {

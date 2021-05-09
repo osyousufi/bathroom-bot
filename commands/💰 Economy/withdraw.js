@@ -15,7 +15,7 @@ module.exports = {
       if (amount == 'all') {
         if (profileData.bank == 0) {
           return message.lineReply(
-            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your bank! broke mf!! LOL`)
+            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your bank!`)
           )
         }
         await profileModel.findOneAndUpdate({
@@ -33,7 +33,7 @@ module.exports = {
         )
       } else if (amount > profileData.bank) {
         return message.lineReply(
-          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAo`)
+          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
         )
       }
 

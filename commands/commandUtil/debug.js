@@ -10,59 +10,7 @@ module.exports = {
   async execute(message, args, profileData, client, prefix) {
 
     if (message.author.id == 267504730341769219) {
-      const options = [
-        'WHALE',
-        'SHARK',
-
-        'DOLPHIN',
-        'CROC',
-        'TROPICFISH',
-        'DOLPHIN',
-        'CROC',
-        'TROPICFISH',
-
-        'OCTOPUS',
-        'BLOWFISH',
-        'SQUID',
-        'OCTOPUS',
-        'BLOWFISH',
-        'SQUID',
-        'OCTOPUS',
-        'BLOWFISH',
-        'SQUID',
-        'OCTOPUS',
-        'BLOWFISH',
-        'SQUID',
-
-
-        'SHRIMP',
-        'SALMON',
-        'CRAB',
-        'LOBSTER',
-        'SHRIMP',
-        'SALMON',
-        'CRAB',
-        'LOBSTER',
-        'SHRIMP',
-        'SALMON',
-        'CRAB',
-        'LOBSTER',
-        'SHRIMP',
-        'SALMON',
-        'CRAB',
-        'LOBSTER',
-        'SHRIMP',
-        'SALMON',
-        'CRAB',
-        'LOBSTER',
-        'SHRIMP',
-        'SALMON',
-        'CRAB',
-        'LOBSTER',
-      ]
-
-
-      message.channel.send(options.length)
+      
     }
 
   }

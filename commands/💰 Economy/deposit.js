@@ -15,7 +15,7 @@ module.exports = {
       if (amount == 'all') {
         if (profileData.wallet <= 0) {
           return message.lineReplyNoMention(
-            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet! broke mf!! LOL`)
+            flashEmbed.display('#FF0000', `${message.author.username},`, `No money in your wallet!`)
           )
         }
         await profileModel.findOneAndUpdate({
@@ -33,7 +33,7 @@ module.exports = {
         )
       } else if (amount > profileData.wallet) {
         return message.lineReplyNoMention(
-          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money! broke mf lmAoo!`)
+          flashEmbed.display('#FF0000', `${message.author.username},`, `You do not have that much money!`)
         )
       }
 

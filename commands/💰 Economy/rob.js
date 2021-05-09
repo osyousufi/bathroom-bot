@@ -36,7 +36,7 @@ module.exports = {
 
         if (taggedProfileData.wallet <= 0) {
           return message.lineReply(
-            flashEmbed.display('RED', `${message.author.username},`, `${taggedUser.username} is a broke mofo and has no money on them! \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
+            flashEmbed.display('RED', `${message.author.username},`, `${taggedUser.username} has no money on them! \nYou have: \`${profileData.wallet - fineAmmount}\` rupees left in your wallet`)
           )
         }
 

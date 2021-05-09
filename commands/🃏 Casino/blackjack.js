@@ -313,7 +313,7 @@ module.exports = {
 				      }, { $inc: {wallet: -amount} })
 
 							return message.lineReply(
-								flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid response!`)
+								flashEmbed.display('RED', `${message.author.username},`, `Please enter a valid response! \n Your game was cancelled due to your tomfoolery.`)
 							)
 						}
 
@@ -323,7 +323,7 @@ module.exports = {
 			        userID: message.author.id
 			      }, { $inc: {wallet: -amount} })
 						return message.lineReply(
-							flashEmbed.display('RED', `${message.author.username},`, `You didn't answer in time!`)
+							flashEmbed.display('RED', `${message.author.username},`, `You didn't answer in time! \n Your game was cancelled due to your tomfoolery.`)
 						)
 					})
 				})
