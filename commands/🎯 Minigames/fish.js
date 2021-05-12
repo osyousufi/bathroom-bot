@@ -5,22 +5,19 @@ const profileModel = require('../../models/profileSchema');
 
 module.exports = {
   name: "fish",
-  cooldown: 120,
-  description: "Go fishing! Requires a fishing rod. Uses the best fishing rod in your inventory automatically",
+  cooldown: 60,
+  description: "Go fishing! Requires a fishing rod.",
   async execute(message, args, profileData, client, prefix) {
 
-    const oldrod = await profileData.inventory.some(i => i.itemName == 'oldrod');
-    const goodrod = await profileData.inventory.some(i => i.itemName == 'goodrod');
-    const ancientrod = await profileData.inventory.some(i => i.itemName == 'ancientrod');
+    let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
-    let bite;
-    if (ancientrod) {
-      bite = chance.bool({likelihood: 95});
-    } else if (goodrod) {
-      bite = chance.bool({likelihood: 75});
-    } else if (oldrod) {
-      bite = chance.bool({likelihood: 50});
-    }
+    let bite = chance.bool({likelihood: 80});
+
+    const shrimpCount = chance.integer({ min: 2, max: 21})
+    const salmonCount = chance.integer({ min: 1, max: 9})
+    const crabCount = chance.integer({ min: 1, max: 2})
+    const squidCount = chance.integer({ min: 1, max: 6})
+    const lobsterCount = chance.integer({ min: 1, max: 2})
 
 
     const fishData = {
@@ -29,55 +26,55 @@ module.exports = {
         itemName: 'shrimp',
         itemIcon: '🦐',
         itemDescription: 'Low-tier catch.',
-        itemPrice: 50,
+        itemPrice: 12,
         itemType: 'MARKET',
         catchRate: 85,
         failChance: false,
-        itemCount: 1,
+        itemCount: shrimpCount,
       },
       'SALMON': {
         displayName: 'Salmon',
         itemName: 'salmon',
         itemIcon: '🐟',
         itemDescription: 'Low-tier catch.',
-        itemPrice: 85,
+        itemPrice: 25,
         itemType: 'MARKET',
         catchRate: 85,
         failChance: false,
-        itemCount: 1,
+        itemCount: salmonCount,
       },
       'CRAB': {
         displayName: 'Crab',
         itemName: 'crab',
         itemIcon: '🦀',
         itemDescription: 'Low-tier catch.',
-        itemPrice: 85,
+        itemPrice: 55,
         itemType: 'MARKET',
         catchRate: 85,
         failChance: false,
-        itemCount: 1,
+        itemCount: crabCount,
+      },
+      'SQUID': {
+        displayName: 'Squid',
+        itemName: 'squid',
+        itemIcon: '🦑',
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 40,
+        itemType: 'MARKET',
+        catchRate: 85,
+        failChance: false,
+        itemCount: squidCount,
       },
       'LOBSTER': {
         displayName: 'Lobster',
         itemName: 'lobster',
         itemIcon: '🦞',
         itemDescription: 'Low-tier catch.',
-        itemPrice: 250,
+        itemPrice: 150,
         itemType: 'MARKET',
-        catchRate: 80,
+        catchRate: 85,
         failChance: false,
-        itemCount: 1,
-      },
-      'SQUID': {
-        displayName: 'Squid',
-        itemName: 'squid',
-        itemIcon: '🦑',
-        itemDescription: 'Mid-tier catch.',
-        itemPrice: 500,
-        itemType: 'MARKET',
-        catchRate: 80,
-        failChance: false,
-        itemCount: 1,
+        itemCount: lobsterCount,
       },
       'BLOWFISH': {
         displayName: 'Blowfish',
@@ -108,7 +105,7 @@ module.exports = {
         itemDescription: 'Rare catch. Has a nice gold tint to it.',
         itemPrice: 5000,
         itemType: 'MARKET',
-        catchRate: 40,
+        catchRate: 50,
         failChance: false,
         itemCount: 1,
       },
@@ -119,7 +116,7 @@ module.exports = {
         itemDescription: 'Rare catch. How did this get here?',
         itemPrice: 10000,
         itemType: 'MARKET',
-        catchRate: 30,
+        catchRate: 45,
         failChance: true,
         itemCount: 1,
       },
@@ -130,7 +127,7 @@ module.exports = {
         itemDescription: 'Rare catch.',
         itemPrice: 20000,
         itemType: 'MARKET',
-        catchRate: 20,
+        catchRate: 25,
         failChance: true,
         itemCount: 1,
       },
@@ -141,7 +138,7 @@ module.exports = {
         itemDescription: 'Legendary catch. Underworld delicacy.',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 10,
+        catchRate: 20,
         failChance: true,
         itemCount: 1,
       },
@@ -167,19 +164,10 @@ module.exports = {
     const catchFish = async (name) => {
 
       let fish = fishData[name];
-      let catchChance;
-
-      if (ancientrod) {
-        catchChance = chance.bool({likelihood: fish.catchRate + 10});
-      } else if (goodrod) {
-        catchChance = chance.bool({likelihood: fish.catchRate + 5});
-      } else if (oldrod) {
-        catchChance = chance.bool({likelihood: fish.catchRate});
-      }
-
+      let catchChance = chance.bool({likelihood: fish.catchRate});
 
       if (catchChance) {
-        result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully caught: ${fish.itemIcon} __${fish.displayName}__`)
+        result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully caught: **x${fish.itemCount}** ${fish.itemIcon} __${fish.displayName}__`)
         await profileModel.findOne({
           userID: message.author.id
         }, async (err, res) => {
@@ -192,7 +180,7 @@ module.exports = {
             const inInventory = await res.inventory.find(i => i.itemName == fish.itemName)
             const idx = res.inventory.indexOf(inInventory)
             if (inInventory) {
-              inInventory.itemCount = parseInt(inInventory.itemCount) + 1
+              inInventory.itemCount = parseInt(inInventory.itemCount) + fish.itemCount
               res.inventory.set(idx, inInventory)
               await res.save()
             } else {
@@ -208,23 +196,15 @@ module.exports = {
             await profileModel.findOne({
               userID: message.author.id
             }, async (err, res) => {
-              let selectedRod;
 
-              if (ancientrod) {
-                selectedRod = await res.inventory.find(i => i.itemName == 'ancientrod')
-              } else if (goodrod) {
-                goodrod = await res.inventory.find(i => i.itemName == 'goodrod')
-              } else if (oldrod) {
-                oldrod = await res.inventory.find(i => i.itemName == 'oldrod')
-              }
+              rod = res.inventory.find(i => i.itemName == 'fishingrod');
+              const idx = res.inventory.indexOf(rod)
 
-              const idx = res.inventory.indexOf(selectedRod)
-
-              selectedRod.itemCount = parseInt(selectedRod.itemCount) - 1
-              res.inventory.set(idx, selectedRod)
+              rod.itemCount = parseInt(rod.itemCount) - 1
+              res.inventory.set(idx, rod)
               await res.save()
 
-              if (selectedRod.itemCount <= 0) {
+              if (rod.itemCount <= 0) {
                 res.inventory.splice(idx, 1)
                 await res.save()
               }
@@ -237,7 +217,7 @@ module.exports = {
         }
     }
 
-    if (oldrod || goodrod || ancientrod) {
+    if (rod) {
       if (bite) {
         fishEmbed.setColor('AQUA')
         fishEmbed.setDescription(`You throw your fishing rod into the ocean... \n **You got a bite!** You attempt to reel in your catch...`)
@@ -246,7 +226,7 @@ module.exports = {
         const sea = [
           'WHALE',
           'SHARK',
-          
+
           'DOLPHIN',
           'CROC',
           'TROPICFISH',
@@ -255,7 +235,6 @@ module.exports = {
           'TROPICFISH',
           'DOLPHIN',
           'CROC',
-          'TROPICFISH',
           'TROPICFISH',
 
           'OCTOPUS',
