@@ -32,8 +32,29 @@ client.on('ready', async () => {
 
 });
 
+
+let debugMode = true
+
 client.on('message', (message) => {
-  commandHandler.config(client, client.commands, client.cooldowns, message)
+
+  if (message.author.id == 267504730341769219 && message.content == '//debug' && !debugMode) {
+    debugMode = true
+    return message.channel.send('debug mode on!')
+  } else if (message.author.id == 267504730341769219 && message.content == '//debug' && debugMode) {
+    debugMode = false
+    return message.channel.send('debug mode off!')
+  }
+
+  if (debugMode) {
+
+    if ( (message.author.id !== 267504730341769219) && (message.content.startsWith('//')) ) {
+      return message.channel.send('bot is in debug mode and is currently unavailable!')
+    }
+
+  } else {
+    commandHandler.config(client, client.commands, client.cooldowns, message)
+  }
+
 });
 
 

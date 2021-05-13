@@ -10,7 +10,6 @@ module.exports = {
 
     const messageCheck = async (prefix) => {
 
-
       if (message.content == ('<@!820429062676938823>')) {
         message.channel.send(
           flashEmbed.display(`DARK_PURPLE`, `${message.author.username}`, `My prefix is: \`${prefix}\``)
@@ -96,8 +95,9 @@ module.exports = {
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
         await command.execute(message, args, profileData, client, prefix);
+
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
 
     }

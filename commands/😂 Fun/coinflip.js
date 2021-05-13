@@ -4,7 +4,7 @@ const chance = new (require('chance'))();
 module.exports = {
 	name: 'coinflip',
 	aliases: ['cf', 'coinf', 'flipcoin'],
-	description: 'Flips a coin)',
+	description: 'Flips a coin',
 	execute(message, args) {
 
     const flipCoin = () => {

@@ -10,38 +10,24 @@ module.exports = {
   aliases: ['bal', 'money', 'cash', 'wallet', 'bank'],
   async execute(message, args, profileData) {
 
-    const taggedUser = message.mentions.users.first();
-    if (taggedUser) {
-
-      let taggedProfileData = await profileModel.findOne({ userID: taggedUser.id });
-      if(!taggedProfileData) {
-        profileHandler.set(profileModel, taggedUser);
-      }
-
-
-      try {
-        return message.lineReply(
-          flashEmbed.display('GREEN', `${taggedUser.username}'s balance:`, `Wallet: **\`${taggedProfileData.wallet}\`** rupees \n\nBank: **\`${taggedProfileData.bank}\`** rupees`)
-        );
-      } catch (err) {
-          return message.lineReply(
-            flashEmbed.display('YELLOW', `${message.author.username},`, `Balance has been configured, use this command again.`)
-          );
-      }
-
-    }
+    const user = message.mentions.users.first() || message.member.user
 
     try {
-      return message.lineReply(
-        flashEmbed.display('GREEN', `${message.author.username}'s balance:`, `Wallet: **\`${profileData.wallet}\`** rupees \n\nBank: **\`${profileData.bank}\`** rupees`)
-      );
+
+      await profileModel.findOne({
+        userID: user.id
+      }, (err, res) => {
+        return message.lineReply(
+          flashEmbed.display('GREEN', `${user.username}'s balance:`, `Wallet: **\`${res.wallet}\`** rupees \n\nBank: **\`${res.bank}\`** rupees`)
+        );
+      });
+
+
     } catch (err) {
       return message.lineReply(
         flashEmbed.display('YELLOW', `${message.author.username},`, `Balance has been configured, use this command again.`)
       );
     }
-
-
 
 
   }
