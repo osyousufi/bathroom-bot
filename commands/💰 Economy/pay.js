@@ -23,7 +23,7 @@ module.exports = {
         amount = profileData.wallet
       } else if (amount % 1 !== 0 || amount <= 0) {
         return message.lineReply(
-          flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number! \nThe proper usage would be: \`${prefix}<@username> <amount>\``)
+          flashEmbed.display('#FF0000', `${message.author.username},`, `Amount must be a positive whole number! \nThe proper usage would be: \`${prefix}pay <@username> <amount>\``)
         )
       } else if (amount > profileData.wallet) {
         return message.lineReply(
