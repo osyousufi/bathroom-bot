@@ -19,9 +19,9 @@ module.exports = {
       .setColor('GREEN')
       .setTitle(`${message.author.username}'s slot machine:`)
 
-    let prize1 = 30
-    let prize2 = 20
-    let prize3 = 10
+    let prize1 = 10
+    let prize2 = 5
+    let prize3 = 3
 
     let tableEmbed = new Discord.MessageEmbed()
       .setColor('DARK_NAVY')
