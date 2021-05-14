@@ -33,7 +33,7 @@ client.on('ready', async () => {
 });
 
 
-let debugMode = true
+let debugMode = false
 
 client.on('message', (message) => {
 
