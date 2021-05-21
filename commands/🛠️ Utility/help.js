@@ -7,7 +7,6 @@ module.exports = {
 	name: 'help',
 	aliases: ['commands'],
 	description: 'List all of my commands or info about a specific command.',
-	catagory: 'info',
 	execute(message, args, profileData, client, prefix) {
 
     const data = [];

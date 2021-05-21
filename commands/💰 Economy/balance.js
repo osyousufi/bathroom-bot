@@ -10,7 +10,7 @@ module.exports = {
   aliases: ['bal', 'money', 'cash', 'wallet', 'bank'],
   async execute(message, args, profileData) {
 
-    const user = message.mentions.users.first() || message.member.user
+    const user = message.mentions.users.first() || message.author
 
     try {
 

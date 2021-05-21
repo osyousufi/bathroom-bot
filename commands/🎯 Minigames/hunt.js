@@ -5,11 +5,10 @@ const profileModel = require('../../models/profileSchema');
 
 module.exports = {
   name: "hunt",
-  cooldown: 60,
+  cooldown: 120,
   description: "Go hunting! Requires a hunting rifle.",
   async execute(message, args, profileData, client, prefix) {
 
-    return message.channel.send('not done yet, almost done tho')
     let rifle = await profileData.inventory.some(i => i.itemName == 'huntingrifle');
 
     let encounter = chance.bool({likelihood: 65});
@@ -22,13 +21,78 @@ module.exports = {
         itemDescription: 'Low-tier catch.',
         itemPrice: 50,
         itemType: 'MARKET',
-        catchRate: 85,
+        catchRate: 95,
         failChance: false,
+        itemCount: 1,
+      },
+      'RABBIT': {
+        displayName: 'Rabbit',
+        itemName: 'rabbit',
+        itemIcon: '🐇',
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 100,
+        itemType: 'MARKET',
+        catchRate: 95,
+        failChance: false,
+        itemCount: 1,
+      },
+      'BOAR': {
+        displayName: 'Boar',
+        itemName: 'boar',
+        itemIcon: '🐗',
+        itemDescription: 'Mid-tier catch.',
+        itemPrice: 800,
+        itemType: 'MARKET',
+        catchRate: 80,
+        failChance: false,
+        itemCount: 1,
+      },
+      'DEER': {
+        displayName: 'Deer',
+        itemName: 'deer',
+        itemIcon: '🦌',
+        itemDescription: 'Mid-tier catch.',
+        itemPrice: 1500,
+        itemType: 'MARKET',
+        catchRate: 70,
+        failChance: false,
+        itemCount: 1,
+      },
+      'BEAR': {
+        displayName: 'Bear',
+        itemName: 'bear',
+        itemIcon: '🐻',
+        itemDescription: 'Rare catch.',
+        itemPrice: 15000,
+        itemType: 'MARKET',
+        catchRate: 45,
+        failChance: true,
+        itemCount: 1,
+      },
+      'ELEPHANT': {
+        displayName: 'Elephant',
+        itemName: 'elephant',
+        itemIcon: '🐘',
+        itemDescription: 'Legendary catch.',
+        itemPrice: 45000,
+        itemType: 'MARKET',
+        catchRate: 20,
+        failChance: false,
+        itemCount: 1,
+      },
+      'RHINO': {
+        displayName: 'Rhino',
+        itemName: 'rhino',
+        itemIcon: '🦏',
+        itemDescription: 'Legendary catch.',
+        itemPrice: 70000,
+        itemType: 'MARKET',
+        catchRate: 15,
+        failChance: true,
         itemCount: 1,
       },
 
     }
-
 
     let result;
     let huntEmbed = new Discord.MessageEmbed()
@@ -36,11 +100,11 @@ module.exports = {
 
     const huntPrey = async (name) => {
 
-      let fish = fishData[name];
-      let catchChance = chance.bool({likelihood: fish.catchRate});
+      let prey = huntData[name];
+      let catchChance = chance.bool({likelihood: prey.catchRate});
 
       if (catchChance) {
-        result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully caught: **x${fish.itemCount}** ${fish.itemIcon} __${fish.displayName}__`)
+        result = flashEmbed.display('GREEN', `${message.author.username},`, `Successfully hunted: **x${prey.itemCount}** ${prey.itemIcon} __${prey.displayName}__`)
         await profileModel.findOne({
           userID: message.author.id
         }, async (err, res) => {
@@ -50,41 +114,41 @@ module.exports = {
                 flashEmbed.display('RED', `${message.author.username},`, `Your inventory is full!`)
               )
             }
-            const inInventory = await res.inventory.find(i => i.itemName == fish.itemName)
+            const inInventory = await res.inventory.find(i => i.itemName == prey.itemName)
             const idx = res.inventory.indexOf(inInventory)
             if (inInventory) {
-              inInventory.itemCount = parseInt(inInventory.itemCount) + fish.itemCount
+              inInventory.itemCount = parseInt(inInventory.itemCount) + prey.itemCount
               res.inventory.set(idx, inInventory)
               await res.save()
             } else {
-              await res.inventory.push(fish)
+              await res.inventory.push(prey)
               await res.save()
             }
 
           });
         } else {
 
-          if (fish.failChance) {
-            result = flashEmbed.display('RED', `${message.author.username},`, `You got a bite but.. things take a turn for the worse and your fishing rod gets pulled in! \n Better luck next time...`)
+          if (prey.failChance) {
+            result = flashEmbed.display('RED', `${message.author.username},`, `You found prey but... the animal stands its ground, causing you to flee and leave your rifle behind! \n Better luck next time...`)
             await profileModel.findOne({
               userID: message.author.id
             }, async (err, res) => {
 
-              rod = res.inventory.find(i => i.itemName == 'fishingrod');
-              const idx = res.inventory.indexOf(rod)
+              rifle = res.inventory.find(i => i.itemName == 'huntingrifle');
+              const idx = res.inventory.indexOf(rifle)
 
-              rod.itemCount = parseInt(rod.itemCount) - 1
-              res.inventory.set(idx, rod)
+              rifle.itemCount = parseInt(rifle.itemCount) - 1
+              res.inventory.set(idx, rifle)
               await res.save()
 
-              if (rod.itemCount <= 0) {
+              if (rifle.itemCount <= 0) {
                 res.inventory.splice(idx, 1)
                 await res.save()
               }
 
             })
           } else {
-            result = flashEmbed.display('RED', `${message.author.username},`, `The fish got away. Better luck next time!`)
+            result = flashEmbed.display('RED', `${message.author.username},`, `The prey got away. Better luck next time!`)
           }
 
         }
@@ -92,48 +156,12 @@ module.exports = {
 
     if (rifle) {
       if (encounter) {
-        huntEmbed.setColor('DARK_ORANGE')
+        huntEmbed.setColor('DARK_GOLD')
         huntEmbed.setDescription(`You enter the woods looking for prey... \n **You see something in the distance!** You take the shot...`)
         await message.channel.send(huntEmbed)
 
-        const forest = [
-          'WHALE',
-          'SHARK',
-
-          'DOLPHIN',
-          'CROC',
-          'TROPICFISH',
-
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-        ]
-
-        const luck = chance.integer({ min: 0, max: (sea.length - 1)})
-        huntPrey(forest[luck])
+        const luck = chance.integer({ min: 0, max: (Object.keys(huntData).length - 1)})
+        huntPrey(Object.keys(huntData)[luck])
 
         return await message.lineReply(result)
       } else {

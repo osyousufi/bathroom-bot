@@ -5,8 +5,8 @@ const profileHandler = require('../../utility/profile-handler.js');
 
 module.exports = {
   name: "pay",
-  args: true,
   mention: true,
+  guildOnly: true,
   usage: '<@username> <amount>',
   description: "Give a user money",
   async execute(message, args, profileData, client, prefix) {

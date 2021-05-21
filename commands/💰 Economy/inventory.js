@@ -9,7 +9,7 @@ module.exports = {
   description: "Show your inventory",
   async execute(message, args, profileData, client, prefix) {
 
-    const user = message.mentions.users.first() || message.member.user
+    const user = message.mentions.users.first() || message.author
     const maxSpace = 10;
 
     const invEmbed = new Discord.MessageEmbed()
@@ -26,7 +26,7 @@ module.exports = {
 
         invEmbed.setTitle(`${user.username}'s inventory [${res.inventory.length}/${maxSpace}]:`)
         for (let item of res.inventory) {
-           invEmbed.addField(`${item.itemIcon} __${item.displayName}__ x ${item.itemCount}`, `Price: \`${item.itemPrice}\` rupees \nDescription: ${item.itemDescription}`)
+           invEmbed.addField(`${item.itemIcon} __${item.displayName}__ x ${item.itemCount}`, `Price: \`${item.itemPrice}\` rupees`)
         }
 
 

@@ -26,17 +26,12 @@ module.exports = {
         )
       }
 
-      if (item == 'handgun') {
+      if (validItem.itemType == 'TOOL') {
         return message.lineReply(
-          flashEmbed.display('BLACK', `${message.author.username},`, `You pull out your gun and stare at it for a bit. \n Maybe you could use this to **rob** someone...`)
+          flashEmbed.display('ORANGE', `${message.author.username},`, `You can't directly use this item. But maybe there's another way to use it...`)
         )
       }
 
-      if (item == 'fishingrod') {
-        return message.lineReply(
-          flashEmbed.display('AQUA', `${message.author.username},`, `You pull out your fishing rod and stare at it for a bit. \n Maybe you could use this to **fish** in the sea...`)
-        )
-      }
 
     } else {
       return message.lineReply(

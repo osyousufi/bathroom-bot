@@ -11,7 +11,7 @@ module.exports = {
 
     let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
-    let bite = chance.bool({likelihood: 75});
+    let bite = chance.bool({likelihood: 80});
 
     const shrimpCount = chance.integer({ min: 2, max: 21})
     const salmonCount = chance.integer({ min: 1, max: 10})
@@ -105,7 +105,7 @@ module.exports = {
         itemDescription: 'Rare catch. Has a nice gold tint to it.',
         itemPrice: 3000,
         itemType: 'MARKET',
-        catchRate: 45,
+        catchRate: 55,
         failChance: false,
         itemCount: 1,
       },
@@ -127,7 +127,7 @@ module.exports = {
         itemDescription: 'Rare catch.',
         itemPrice: 25000,
         itemType: 'MARKET',
-        catchRate: 30,
+        catchRate: 25,
         failChance: true,
         itemCount: 1,
       },
@@ -138,7 +138,7 @@ module.exports = {
         itemDescription: 'Legendary catch. Underworld delicacy.',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 15,
+        catchRate: 10,
         failChance: true,
         itemCount: 1,
       },
@@ -222,23 +222,8 @@ module.exports = {
         fishEmbed.setDescription(`You throw your fishing rod into the ocean... \n **You got a bite!** You attempt to reel in your catch...`)
         message.channel.send(fishEmbed)
 
-        const sea = [
-          'WHALE',
-          'SHARK',
-          'DOLPHIN',
-          'CROC',
-          'TROPICFISH',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-        ]
-
-        const luck = chance.integer({ min: 0, max: (sea.length - 1)})
-        catchFish(sea[luck])
+        const luck = chance.integer({ min: 0, max: (Object.keys(fishData).length - 1)})
+        catchFish(Object.keys(fishData)[luck])
 
         return message.lineReply(result)
 

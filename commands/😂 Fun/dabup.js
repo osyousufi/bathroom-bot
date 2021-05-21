@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'dabup',
-	args: true,
 	guildOnly: true,
 	mention: true,
 	usage: '<@username>',

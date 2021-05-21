@@ -7,6 +7,7 @@ const profileHandler = require('../../utility/profile-handler.js');
 module.exports = {
   name: "rob",
   mention: true,
+  guildOnly: true,
   usage: '<@username>',
   aliases: ['steal'],
   description: "Rob a user. Having a gun increases the chance!",

@@ -5,6 +5,7 @@ module.exports = {
   name: "emoji",
   description: "Retrieve a custom emoji from a server that bathroom bot is in!",
   args: true,
+  guildOnly: true,
   usage: '<emoji name> [r(optional), id(optional)]',
   aliases: ['emote', 'emoticon'],
   async execute(message, args, profileData, client) {
