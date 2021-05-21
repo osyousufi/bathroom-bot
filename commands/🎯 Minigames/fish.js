@@ -240,9 +240,7 @@ module.exports = {
         const luck = chance.integer({ min: 0, max: (sea.length - 1)})
         catchFish(sea[luck])
 
-        setTimeout(() => {
-          return message.lineReply(result)
-        }, 5000)
+        return message.lineReply(result)
 
       } else {
         return message.lineReply(
