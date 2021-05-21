@@ -9,9 +9,7 @@ module.exports = {
   description: "debug command for osyou",
   async execute(message, args, profileData, client, prefix) {
 
-    if (message.author.id == 267504730341769219) {
-      
-    }
+    message.channel.send('test')
 
   }
 }

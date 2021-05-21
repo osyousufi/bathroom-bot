@@ -29,32 +29,10 @@ client.on('ready', async () => {
   eventHandler.load(client);
   client.user.setActivity("//help | WIP!");
 	console.log('Ready!');
-
 });
 
-
-let debugMode = false
-
 client.on('message', (message) => {
-
-  if (message.author.id == 267504730341769219 && message.content == '//debug' && !debugMode) {
-    debugMode = true
-    return message.channel.send('debug mode on!')
-  } else if (message.author.id == 267504730341769219 && message.content == '//debug' && debugMode) {
-    debugMode = false
-    return message.channel.send('debug mode off!')
-  }
-
-  if (debugMode) {
-
-    if ( (message.author.id !== 267504730341769219) && (message.content.startsWith('//')) ) {
-      return message.channel.send('bot is in debug mode and is currently unavailable!')
-    }
-
-  } else {
-    commandHandler.config(client, client.commands, client.cooldowns, message)
-  }
-
+  commandHandler.config(client, client.commands, client.cooldowns, message)
 });
 
 

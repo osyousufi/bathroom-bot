@@ -179,7 +179,7 @@ module.exports = {
 
     setTimeout(() => {
       gameWon ? message.lineReply('***YOU WIN!***') : message.lineReply('***YOU LOSE!***')
-      message.channel.send(rlEmbed)
+      return message.channel.send(rlEmbed)
     }, 2500)
 
   }

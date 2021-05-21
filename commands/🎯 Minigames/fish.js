@@ -11,13 +11,13 @@ module.exports = {
 
     let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
-    let bite = chance.bool({likelihood: 80});
+    let bite = chance.bool({likelihood: 75});
 
     const shrimpCount = chance.integer({ min: 2, max: 21})
-    const salmonCount = chance.integer({ min: 1, max: 9})
-    const crabCount = chance.integer({ min: 1, max: 2})
+    const salmonCount = chance.integer({ min: 1, max: 10})
+    const crabCount = chance.integer({ min: 1, max: 7})
     const squidCount = chance.integer({ min: 1, max: 6})
-    const lobsterCount = chance.integer({ min: 1, max: 2})
+    const lobsterCount = chance.integer({ min: 1, max: 5})
 
 
     const fishData = {
@@ -28,7 +28,7 @@ module.exports = {
         itemDescription: 'Low-tier catch.',
         itemPrice: 12,
         itemType: 'MARKET',
-        catchRate: 85,
+        catchRate: 95,
         failChance: false,
         itemCount: shrimpCount,
       },
@@ -39,20 +39,9 @@ module.exports = {
         itemDescription: 'Low-tier catch.',
         itemPrice: 25,
         itemType: 'MARKET',
-        catchRate: 85,
+        catchRate: 95,
         failChance: false,
         itemCount: salmonCount,
-      },
-      'CRAB': {
-        displayName: 'Crab',
-        itemName: 'crab',
-        itemIcon: '🦀',
-        itemDescription: 'Low-tier catch.',
-        itemPrice: 55,
-        itemType: 'MARKET',
-        catchRate: 85,
-        failChance: false,
-        itemCount: crabCount,
       },
       'SQUID': {
         displayName: 'Squid',
@@ -61,18 +50,29 @@ module.exports = {
         itemDescription: 'Low-tier catch.',
         itemPrice: 40,
         itemType: 'MARKET',
-        catchRate: 85,
+        catchRate: 90,
         failChance: false,
         itemCount: squidCount,
+      },
+      'CRAB': {
+        displayName: 'Crab',
+        itemName: 'crab',
+        itemIcon: '🦀',
+        itemDescription: 'Low-tier catch.',
+        itemPrice: 55,
+        itemType: 'MARKET',
+        catchRate: 90,
+        failChance: false,
+        itemCount: crabCount,
       },
       'LOBSTER': {
         displayName: 'Lobster',
         itemName: 'lobster',
         itemIcon: '🦞',
         itemDescription: 'Low-tier catch.',
-        itemPrice: 150,
+        itemPrice: 100,
         itemType: 'MARKET',
-        catchRate: 85,
+        catchRate: 90,
         failChance: false,
         itemCount: lobsterCount,
       },
@@ -81,9 +81,9 @@ module.exports = {
         itemName: 'blowfish',
         itemIcon: '🐡',
         itemDescription: 'Mid-tier catch.',
-        itemPrice: 500,
+        itemPrice: 750,
         itemType: 'MARKET',
-        catchRate: 75,
+        catchRate: 85,
         failChance: false,
         itemCount: 1,
       },
@@ -94,7 +94,7 @@ module.exports = {
         itemDescription: 'Mid-tier catch.',
         itemPrice: 1000,
         itemType: 'MARKET',
-        catchRate: 70,
+        catchRate: 85,
         failChance: false,
         itemCount: 1,
       },
@@ -103,9 +103,9 @@ module.exports = {
         itemName: 'tropicalfish',
         itemIcon: '🐠',
         itemDescription: 'Rare catch. Has a nice gold tint to it.',
-        itemPrice: 5000,
+        itemPrice: 3000,
         itemType: 'MARKET',
-        catchRate: 40,
+        catchRate: 45,
         failChance: false,
         itemCount: 1,
       },
@@ -114,9 +114,9 @@ module.exports = {
         itemName: 'crocodile',
         itemIcon: '🐊',
         itemDescription: 'Rare catch. How did this get here?',
-        itemPrice: 10000,
+        itemPrice: 5000,
         itemType: 'MARKET',
-        catchRate: 30,
+        catchRate: 50,
         failChance: true,
         itemCount: 1,
       },
@@ -125,9 +125,9 @@ module.exports = {
         itemName: 'dolphin',
         itemIcon: '🐬',
         itemDescription: 'Rare catch.',
-        itemPrice: 20000,
+        itemPrice: 25000,
         itemType: 'MARKET',
-        catchRate: 15,
+        catchRate: 30,
         failChance: true,
         itemCount: 1,
       },
@@ -138,7 +138,7 @@ module.exports = {
         itemDescription: 'Legendary catch. Underworld delicacy.',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 10,
+        catchRate: 15,
         failChance: true,
         itemCount: 1,
       },
@@ -158,7 +158,6 @@ module.exports = {
 
     let result;
     let fishEmbed = new Discord.MessageEmbed()
-      .setColor('DARK_AQUA')
       .setTitle(`${message.author.username}`)
 
     const catchFish = async (name) => {
@@ -221,85 +220,32 @@ module.exports = {
       if (bite) {
         fishEmbed.setColor('AQUA')
         fishEmbed.setDescription(`You throw your fishing rod into the ocean... \n **You got a bite!** You attempt to reel in your catch...`)
-        await message.channel.send(fishEmbed)
+        message.channel.send(fishEmbed)
 
         const sea = [
           'WHALE',
           'SHARK',
-
           'DOLPHIN',
           'CROC',
           'TROPICFISH',
-          'DOLPHIN',
-          'CROC',
-          'TROPICFISH',
-          'DOLPHIN',
-          'CROC',
-          'TROPICFISH',
-
           'OCTOPUS',
           'BLOWFISH',
           'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-          'SQUID',
-          'OCTOPUS',
-          'BLOWFISH',
-          'SQUID',
-
           'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
-          'LOBSTER',
-          'SHRIMP',
-          'SALMON',
-          'CRAB',
           'SHRIMP',
           'SALMON',
           'CRAB',
         ]
 
         const luck = chance.integer({ min: 0, max: (sea.length - 1)})
-        const fish = sea[luck]
-        catchFish(fish)
+        catchFish(sea[luck])
 
-        return await message.lineReply(result)
+        setTimeout(() => {
+          return message.lineReply(result)
+        }, 5000)
+
       } else {
-        return await message.lineReply(
+        return message.lineReply(
           flashEmbed.display('RED', `${message.author.username},`, `You throw your fishing rod into the ocean... \n You didn't get anything. Better luck next time!`)
         )
       }

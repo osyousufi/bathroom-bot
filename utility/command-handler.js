@@ -8,7 +8,19 @@ const profileHandler = require('./profile-handler.js');
 module.exports = {
   async config(client, commands, cooldowns, message) {
 
+    const debugMode = false;
+
     const messageCheck = async (prefix) => {
+
+      if (debugMode) {
+
+        if (!message.author.bot && message.content.startsWith(prefix) ) {
+          if (message.author.id !== "267504730341769219") {
+            return message.channel.send('bot is in debug mode and is currently unavailable!')
+          }
+        }
+
+      }
 
       if (message.content == ('<@!820429062676938823>')) {
         message.channel.send(
@@ -118,9 +130,6 @@ module.exports = {
         messageCheck(prefix);
       }
     }
-
-
-
 
   }
 };
