@@ -11,7 +11,7 @@ module.exports = {
 
     let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
-    let bite = chance.bool({likelihood: 65});
+    let bite = chance.bool({likelihood: 75});
 
     const shrimpCount = chance.integer({ min: 2, max: 21})
     const salmonCount = chance.integer({ min: 1, max: 10})

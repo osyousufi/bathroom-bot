@@ -11,7 +11,7 @@ module.exports = {
 
     let rifle = await profileData.inventory.some(i => i.itemName == 'huntingrifle');
 
-    let encounter = chance.bool({likelihood: 65});
+    let encounter = chance.bool({likelihood: 80});
 
     const huntData = {
       'DUCK': {
