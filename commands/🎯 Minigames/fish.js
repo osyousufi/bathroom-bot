@@ -11,7 +11,7 @@ module.exports = {
 
     let rod = await profileData.inventory.some(i => i.itemName == 'fishingrod');
 
-    let bite = chance.bool({likelihood: 80});
+    let bite = chance.bool({likelihood: 65});
 
     const shrimpCount = chance.integer({ min: 2, max: 21})
     const salmonCount = chance.integer({ min: 1, max: 10})
@@ -127,7 +127,7 @@ module.exports = {
         itemDescription: 'Rare catch.',
         itemPrice: 25000,
         itemType: 'MARKET',
-        catchRate: 25,
+        catchRate: 10,
         failChance: true,
         itemCount: 1,
       },
@@ -138,7 +138,7 @@ module.exports = {
         itemDescription: 'Legendary catch. Underworld delicacy.',
         itemPrice: 100000,
         itemType: 'MARKET',
-        catchRate: 10,
+        catchRate: 7,
         failChance: true,
         itemCount: 1,
       },
@@ -149,7 +149,7 @@ module.exports = {
         itemDescription: 'Legendary catch. How the hell did you catch this?!',
         itemPrice: 300000,
         itemType: 'MARKET',
-        catchRate: 5,
+        catchRate: 1,
         failChance: true,
         itemCount: 1,
       },
