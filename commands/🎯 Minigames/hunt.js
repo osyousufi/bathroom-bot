@@ -72,7 +72,7 @@ module.exports = {
       'WOLF': {
         displayName: 'Wolf',
         itemName: 'wolf',
-        itemIcon: '🦌',
+        itemIcon: '🐺',
         itemDescription: 'Mid-tier catch.',
         itemPrice: 1500,
         itemType: 'MARKET',
