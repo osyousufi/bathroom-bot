@@ -32,6 +32,12 @@ module.exports = {
         )
       }
 
+      if (validItem.itemType == 'TREASURE') {
+        return message.lineReply(
+          flashEmbed.display('GOLD', `${message.author.username},`, `You pull out your ${validItem.itemIcon} __${validItem.displayName}__ and stare at it. It looks nice and shiny!`)
+        )
+      }
+
 
     } else {
       return message.lineReply(

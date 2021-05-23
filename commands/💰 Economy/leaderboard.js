@@ -9,7 +9,7 @@ module.exports = {
   description: "Display leaderboard for the guild.",
   async execute(message, args, profileData, client) {
 
-    let lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('GOLD');
+    let lbEmbed = new Discord.MessageEmbed().setTitle('Richest Users Rankings:').setColor('DARK_GREEN');
     let sortedUsers = await profileModel.find({}, null, {sort: { bank : -1 }}, (err, res) => {});
 
     sortedUsers = sortedUsers.slice(0, 10)
